@@ -1,0 +1,117 @@
+/* color codes:   #505 #FDA  */
+/* Fonts: 
+font-family: 'Changa', sans-serif;
+font-family: 'Jura', sans-serif;                //its slim
+font-family: 'Roboto', sans-serif;              //its very formal and serius
+font-family: 'Tourney', cursive;                //its Outlined
+*/
+
+.body-box {
+      border: 1px solid #FDA;
+      box-shadow: inset 3px 2px 5px #FDA, 3px 2px 7px #FDA;
+
+      width: 80vw;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 30px;
+      padding-left: 5vw;
+      padding-right: 5vw;
+      padding-top: 30px;
+      padding-bottom: 30px;
+
+      font-size: 3vw;
+      color: #FDA;
+      font-family: 'Changa', sans-serif;
+
+}
+
+.body-box h1,
+h4,
+p {
+      margin: -10px;
+}
+
+.body-box hr {
+      margin-left: -10px;
+}
+
+.body-box p {
+      font-size: 2vw;
+}
+
+.connect-wallet-btn {
+      border: none;
+      padding: 10px 20px 10px 20px;
+      background-color: #FDA;
+      color: #505;
+      margin-top: 20px;
+      font-size: larger;
+      cursor: pointer;
+      font-family: 'Changa', sans-serif;
+      font-weight: 900;
+
+}
+
+.connect-wallet-btn:hover {
+      background-color: rgb(231, 196, 143);
+      color: rgb(126, 7, 126);
+}
+
+.connect-wallet {
+      background-color: #505;
+      border: 3px solid #FDA;
+      box-shadow: inset 2px 2px 5px rgba(243, 110, 22, 0.8),
+            -2px -2px 5px rgba(243, 110, 22, 0.8),
+            inset -2px -2px 5px rgba(243, 110, 22, 0.8),
+            2px 2px 5px rgba(243, 110, 22, 0.8);
+
+      width: 50vw;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 30px;
+      padding-left: 5vw;
+      padding-right: 5vw;
+      padding-top: 30px;
+      padding-bottom: 30px;
+
+      text-align: center;
+      font-size: 2vw;
+      color: #FDA;
+      font-family: 'Changa', sans-serif;
+}
+
+.header-box {
+      background-color: #505;
+      border: 3px solid #FDA;
+      box-shadow: inset 7px 5px 10px #FDA, 7px 5px 15px #FDA;
+
+      width: 80vw;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 30px;
+      padding-left: 5vw;
+      padding-right: 5vw;
+      padding-top: 30px;
+      padding-bottom: 30px;
+
+      font-size: 4vw;
+      color: #FDA;
+      font-family: 'Changa', sans-serif;
+
+}
+
+.header-box h1,
+p {
+      margin: -10px;
+}
+
+.header-box p {
+      font-size: 3vw;
+}
+
+body {
+      margin: 0px;
+      padding: 0px;
+      box-sizing: border-box;
+      background-color: #505;
+}
