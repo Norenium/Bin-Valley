@@ -12,20 +12,28 @@
 
 
 
-      <!-- favicon -->
+      <!--#region favicon -->
       <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicon/apple-touch-icon.png">
       <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon/favicon-32x32.png">
       <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon/favicon-16x16.png">
       <link rel="manifest" href="assets/images/favicon/site.webmanifest">
+      <!-- #endregion    -->
+
+      <!-- #region  BOOTSTRAP  -->
+      <!-- <link rel="stylesheet" href="assets/node_modules/bootstrap/dist/css/bootstrap.min.css"> -->
+      <link rel="stylesheet" href="assets/node_modules/bootstrap/dist/css/bootstrap.css">
+      <!-- <link rel="stylesheet" href="assets/node_modules/bootstrap/dist/js/bootstrap.js"> -->
+
+      <!-- #endregion    -->
 
 
-
-      <!-- Meta tags -->
+      <!--#region Meta tags -->
       <meta property="og:image"
             content="https://norenium.github.io/Bin-Valley/assets/images/favicon/apple-touch-icon.png">
       <meta property="og:description" content="The cutest GameFi platform ever.">
       <meta property="og:url" content="https://norenium.github.io/Bin-Valley/">
       <meta property="og:title" content="Bin Valley">
+      <!-- #endregion    -->
 
 
       <!-- #region Google Fonts  -->
@@ -45,23 +53,199 @@
             </div>
       </div>
 
-      <div class="connect-wallet" id="connect-wallet-div">
+      <div class="connect-wallet" id="connect-wallet-div" hidden="true">
             <h4>You'll not see the correct info if your wallet is not connected.</h4>
-            <button class="connect-wallet-btn" id="connect-wallet-btn"
-            >Connect Wallet</button>
+            <button class="connect-wallet-btn" id="connect-wallet-btn">Connect Wallet</button>
       </div>
       <div class="body-box">
-            <h4>Game control board</h4>
+            <h1>Information board</h1>
             <p>You will see all the information here. such as your inventory and assets and ...</p>
-<hr>
-            <div class="control-unit">
-                  <p>Name: <span id="name">..........</span></p>
-                  <p>health: <span id="name">..........</span></p>
-                  <p>Fat: <span id="name">..........</span></p>
-                  <p>Energy: <span id="name">..........</span></p>
+            <hr>
+            <div class="row col-12">
+                  <div class="col-6">
+                        <div class="control-unit">
+                              <p>Name: <span id="name">..........</span></p>
+                              <div class="row">
+                                    <div class="col-3">
+                                          <p id="health-title">health: </p>
+                                    </div>
+                                    <div class="col-9" style="padding-top:9px ;">
+
+                                          <div class="progress">
+                                                <div class="progress-bar bg-success " role="progressbar"
+                                                      style="width: 85%" aria-valuenow="85" aria-valuemin="0"
+                                                      aria-valuemax="100" id="health-bar">85%
+                                                </div>
+
+                                          </div>
+                                    </div>
+                              </div>
+                              <div class="row">
+                                    <div class="col-3">
+                                          <p id="health-title">Fat: </p>
+                                    </div>
+                                    <div class="col-9" style="padding-top:9px ;">
+
+                                          <div class="progress">
+                                                <div class="progress-bar bg-warning " role="progressbar"
+                                                      style="width: 20%" aria-valuenow="20" aria-valuemin="0"
+                                                      aria-valuemax="100" id="health-bar">20%
+                                                </div>
+
+                                          </div>
+                                    </div>
+                              </div>
+                              <div class="row">
+                                    <div class="col-3">
+                                          <p id="health-title">Energy: </p>
+                                    </div>
+                                    <div class="col-9" style="padding-top:9px ;">
+
+                                          <div class="progress">
+                                                <div class="progress-bar bg-danger " role="progressbar"
+                                                      style="width: 100%" aria-valuenow="100" aria-valuemin="0"
+                                                      aria-valuemax="100" id="health-bar">100%
+                                                </div>
+
+                                          </div>
+                                    </div>
+                              </div>
+
+                        </div>
+                  </div>
+                  <div class="col-6">
+
+                        <div class="control-unit  ">
+                              <p>Inventory: </p>
+                              <hr>
+                              <div class="row">
+                                    <div class="col-10 ">
+                                          <p id="health-title">OOPS: <span class="float-end">80 OP</span> </p>
+                                    </div>
+                                    <div class="col-10 ">
+                                          <p id="health-title">Bread: <span class="float-end">450 BR</span> </p>
+                                    </div>
+
+                                    <div class="col-10 ">
+                                          <p id="health-title">Meat: <span class="float-end">250 MT</span> </p>
+                                    </div>
+                                    <div class="col-10 ">
+                                          <p id="health-title">Electricity: <span class="float-end">112 MW</span> </p>
+                                    </div>
+                                    <div class="col-10 ">
+                                          <p id="health-title">Wheat: <span class="float-end">0 WH</span> </p>
+                                    </div>
+
+                                    <div class="col-10 ">
+                                          <p id="health-title">Flour: <span class="float-end">0 FL</span> </p>
+                                    </div>
+
+
+
+                              </div>
+
+
+                        </div>
+                  </div>
             </div>
       </div>
-      <script  src="assets/js/main.js"></script>
+
+      <div class="body-box">
+            <h1>Control board</h1>
+            <p>You have access to game actions here:</p>
+            <hr>
+            <div class="row col-12">
+                  <div class="col-6">
+                        <div class="control-unit">
+                              <p>Name: <span id="name">..........</span></p>
+                              <div class="row">
+                                    <div class="col-3">
+                                          <p id="health-title">health: </p>
+                                    </div>
+                                    <div class="col-9" style="padding-top:9px ;">
+
+                                          <div class="progress">
+                                                <div class="progress-bar bg-success " role="progressbar"
+                                                      style="width: 85%" aria-valuenow="85" aria-valuemin="0"
+                                                      aria-valuemax="100" id="health-bar">85%
+                                                </div>
+
+                                          </div>
+                                    </div>
+                              </div>
+                              <div class="row">
+                                    <div class="col-3">
+                                          <p id="health-title">Fat: </p>
+                                    </div>
+                                    <div class="col-9" style="padding-top:9px ;">
+
+                                          <div class="progress">
+                                                <div class="progress-bar bg-warning " role="progressbar"
+                                                      style="width: 20%" aria-valuenow="20" aria-valuemin="0"
+                                                      aria-valuemax="100" id="health-bar">20%
+                                                </div>
+
+                                          </div>
+                                    </div>
+                              </div>
+                              <div class="row">
+                                    <div class="col-3">
+                                          <p id="health-title">Energy: </p>
+                                    </div>
+                                    <div class="col-9" style="padding-top:9px ;">
+
+                                          <div class="progress">
+                                                <div class="progress-bar bg-danger " role="progressbar"
+                                                      style="width: 100%" aria-valuenow="100" aria-valuemin="0"
+                                                      aria-valuemax="100" id="health-bar">100%
+                                                </div>
+
+                                          </div>
+                                    </div>
+                              </div>
+
+                        </div>
+                  </div>
+                  <div class="col-6">
+
+                        <div class="control-unit  ">
+                              <p>Inventory: </p>
+                              <hr>
+                              <div class="row">
+                                    <div class="col-10 ">
+                                          <p id="health-title">OOPS: <span class="float-end">80 OP</span> </p>
+                                    </div>
+                                    <div class="col-10 ">
+                                          <p id="health-title">Bread: <span class="float-end">450 BR</span> </p>
+                                    </div>
+
+                                    <div class="col-10 ">
+                                          <p id="health-title">Meat: <span class="float-end">250 MT</span> </p>
+                                    </div>
+                                    <div class="col-10 ">
+                                          <p id="health-title">Electricity: <span class="float-end">112 MW</span> </p>
+                                    </div>
+                                    <div class="col-10 ">
+                                          <p id="health-title">Wheat: <span class="float-end">0 WH</span> </p>
+                                    </div>
+
+                                    <div class="col-10 ">
+                                          <p id="health-title">Flour: <span class="float-end">0 FL</span> </p>
+                                    </div>
+
+
+
+                              </div>
+
+
+                        </div>
+                  </div>
+            </div>
+      </div>
+
+
+      <script src="assets/js/main.js"></script>
 
 </body>
+
 </html>
