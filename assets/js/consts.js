@@ -1,4 +1,4 @@
-const contractAddress = "0x828814369F8B81D8Bda3bc00eB460AA1b3cB38B2";
+const contractAddress = "0x954D9595fC559550A3d86451d8e23b109b44798A";
 
 
 const ABI =
@@ -337,6 +337,19 @@ const ABI =
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getMyInventory",
+		"outputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
 			}
 		],
 		"stateMutability": "view",

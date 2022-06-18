@@ -37,12 +37,82 @@ document.getElementById('contract-address').innerHTML = contractAddress;
 
 function setPageData() {
 
-myContract.getMyBodyEnergy().then(res=>{
-      console.log('Energy: '+res)
-      console.info(res);
-}
-);
+      // myContract.getMyBodyEnergy().then(res => {
+      //       console.log('Energy res: ' + res)
+      //       var per = Math.floor(res / 7);
+      //       console.log('Energy per: ' + per)
+      //       document.getElementById('energy-bar').style.width = per + "%";
+      //       document.getElementById('energy-percentage').innerHTML = per + "%";
+      //       document.getElementById('energy-cal').innerHTML = res + " Cal";
+      // }
+      // );
 
+      // myContract.getMyBodyFat().then(res => {
+      //       console.log('Fat res: ' + res)
+      //       var per = Math.floor(res / 50);
+      //       console.log('Fat per: ' + per)
+      //       document.getElementById('fat-bar').style.width = per + "%";
+      //       document.getElementById('fat-percentage').innerHTML = per + "%";
+      //       document.getElementById('fat-cal').innerHTML = res + " Cal";
+      // }
+      // );
+
+      // myContract.getMyBodyHealth().then(res => {
+      //       console.log('Health res: ' + res)
+      //       var per = Math.floor(res );
+      //       console.log('Health per: ' + per)
+      //       document.getElementById('health-bar').style.width = per + "%";
+      //       document.getElementById('health-percentage').innerHTML = per + "%";
+      // }
+      // );
+
+
+      myContract.getMyInventory().then(res => {
+            console.log('6 res: ' + res[8]);
+
+            //Flour
+            var opousMoneyPersentage = Math.floor(res[0] );
+            document.getElementById('op-val').innerHTML = opousMoneyPersentage ;
+
+            //Flour
+            var electricityPersentage = Math.floor(res[1] );
+            document.getElementById('mw-val').innerHTML = electricityPersentage ;
+
+            //Flour
+            var WheatPersentage = Math.floor(res[2] );
+            document.getElementById('wh-val').innerHTML = WheatPersentage ;
+
+            //Flour
+            var BreadPersentage = Math.floor(res[3] );
+            document.getElementById('br-val').innerHTML = BreadPersentage ;
+
+            //Flour
+            var healthPersentage = Math.floor(res[4] );
+            document.getElementById('fl-val').innerHTML = healthPersentage ;
+
+            //Meat
+            var healthPersentage = Math.floor(res[5] );
+            document.getElementById('mt-val').innerHTML = healthPersentage ;
+
+            //Health
+            var healthPersentage = Math.floor(res[6] );
+            document.getElementById('health-bar').style.width = healthPersentage + "%";
+            document.getElementById('health-percentage').innerHTML = healthPersentage + "%";
+
+            // Fat
+            var fatPercentage = Math.floor(res[7] / 50);
+            document.getElementById('fat-bar').style.width = fatPercentage + "%";
+            document.getElementById('fat-percentage').innerHTML = fatPercentage + "%";
+            document.getElementById('fat-cal').innerHTML = Math.floor(res[7]) + " Cal";
+
+
+            // Energy
+            var energyPercentage = Math.floor(res[8] / 7);
+            document.getElementById('energy-bar').style.width = energyPercentage + "%";
+            document.getElementById('energy-percentage').innerHTML = energyPercentage + "%";
+            document.getElementById('energy-cal').innerHTML =  Math.floor(res[8]) + " Cal";
+      }
+      );
 
 };
 
@@ -96,7 +166,6 @@ async function checkForMetamask() {
       if (window.ethereum === undefined) {
             sendAlert('You need to install MetaMask Extention.')
             return Promise.resolve(false);
-
       } else {
             hasMetamask = true;
             provider = new ethers.providers.Web3Provider(window.ethereum, "any");
