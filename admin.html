@@ -65,10 +65,48 @@
                   </div>
 
             </div>
+            <div class="row col-12">
+                  Add Land:
+                  <div class="control-unit">
+                        <form action="">
+                              <p>Land Ids:</p>
+                              <div class="input-group mb-3">
+                                    <input type="text" class="form-control" aria-label="Sizing example input"
+                                          aria-describedby="inputGroup-sizing-default" id="land-ids" 
+                                          value="AS21,AT20,AT21,AT22,AT24,AU23,AU24,AW20,AW21,AW22,AX21,AX22,AS22,AS23,AS24,AS26,AT23,AN27,AN29,AN31">
+                              </div>
+                              <p>Land Types:</p>
+                              <div class="input-group mb-3">
+                                    <input type="number[]" class="form-control" aria-label="Sizing example input"
+                                          aria-describedby="inputGroup-sizing-default" id="land-types" 
+                                          value="4,4,4,4,4,4,4,4,4,4,4,4,3,3,3,3,3,0,0,0">
+                              </div>
+                              <p>Lands count:</p>
+                              <div class="input-group mb-3">
+                                    <input type="number" class="form-control" aria-label="Sizing example input"
+                                          aria-describedby="inputGroup-sizing-default"  id="land-count" value="20">
+                              </div>
+                              <button type="button" class="btn btn-primary float-end" onclick="addLands()"> Add Lands </button>
+                        </form>
+
+                  </div>
+
+            </div>
+
+            <div class="row col-12">
+                  All Lands:
+                  <div class="control-unit">
+
+                        <p id="land-id"> <span id="land-use"></span></p>
+
+                  </div>
+
+            </div>
       </div>
 
-
-      <script src="assets/js/main.js"></script>
+      <script src="./assets/node_modules/ethers/dist/ethers.umd.min.js"></script>
+      <script src="assets/js/consts.js"></script>
+      <script src="assets/js/intract.js"></script>
       <script src="assets/js/admin.js"></script>
 
 </body>

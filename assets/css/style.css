@@ -6,6 +6,20 @@ font-family: 'Roboto', sans-serif;              //its very formal and serius
 font-family: 'Tourney', cursive;                //its Outlined
 */
 
+.land-for-sale{
+      margin: 5px;
+      padding:  10px !important;
+      border: #FDA 2px solid;
+      background-color: rgba(255, 221, 170, 0.2);
+}
+.land-for-sale p {
+       font-size: 1.6vw !important; 
+}
+
+.lfs-img{
+      max-width: 6vw !important;
+      height: auto;
+}
 .little-comment{
       margin: 0px !important;
       padding: 0px !important;

@@ -172,9 +172,6 @@
                               <p>Hunting: </p>
                               <p class="alert alert-danger" role="alert">You have not any hunting camp.</p>
                               <p>Time to next hunt: 5H 22M</p>
-
-
-
                         </div>
                   </div>
                   <div class="col-6">
@@ -190,7 +187,35 @@
             </div>
       </div>
 
+      <div class="body-box">
+            <h1>Market board</h1>
+            <p>Lands and goods market here:</p>
+            <hr>
 
+            <div class="control-unit">
+                  <p>Land for sale:</p>
+                  <hr>
+                  <div id="sell-list"></div>
+            </div>
+            <br>
+            <div class="control-unit">
+                  <p>List a land to sale:</p>
+                  <hr>
+                  <div>
+                        <div class="land-for-sale col-12 row">
+
+
+                              <p class="col-6 row ">Enter Land Id: <input type="text" id="sell-landId"> </p>
+                              <p class="col-5">Enter Price: <input type="number" id="sell-price"> </p>
+                              <button type="button" class="btn btn-primary float-end col-1"
+                                    onclick="listLand()">List</button>
+
+                              </button>
+
+                        </div>
+                  </div>
+            </div>
+      </div>
       <script src="./assets/node_modules/ethers/dist/ethers.umd.min.js"></script>
       <script src="assets/js/consts.js"></script>
       <script src="assets/js/intract.js"></script>
