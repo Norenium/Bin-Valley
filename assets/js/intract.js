@@ -1,42 +1,11 @@
 StartContract();
-//document.getElementById('contract-address').innerHTML = contractAddress;
-console.log('window.location: ' + window.location);
-//#region variables
-
-
-
-
-//#endregion
-
-//#region Page Functions
-//#region Send Data to contract
-
-// document.getElementById('chip-in').addEventListener('click', function () {
-
-//       if (TicketPrice == 0) {
-//             if (IsBucketReady != true) {
-//                   window.alert('There is no running lottery bucket now.')
-//             } else {
-//                   window.alert('Ticket Price is not defined correctly.\n Please refresh the page and' +
-//                         ' try again.')
-//             }
-//       } else {
-//             var val = ethers.utils.parseEther(TicketPrice.toString());
-//             console.log('sending value (10^18): ' + val);
-//             myContract.chipIn({ value: val });
-//       }
-
-// })
-
-
-//#endregion 
-
 
 
 //#region FETCH contract data methods
 
 function setPageData() {
-      myContract.getMyInventory().then(res => {
+      //getMyName();
+      myContract.charlieCall(31, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [""], []).then(res => {
             console.log('6 res: ' + res[8]);
 
             //Flour
@@ -82,17 +51,18 @@ function setPageData() {
             document.getElementById('energy-cal').innerHTML = Math.floor(res[8]) + " Cal";
       }
       );
+      setLandData();
 };
 var pricesArray;
 let landIdArray;
 function setLandData() {
       console.log('setLandData Started');
-      myLandContract.getSellLandList().then(res => {
+      myContract.charlieCall(14, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [""], []).then(res => {
 
             console.log('setLandData 2 ');
 
             pricesArray = res;
-            myLandContract.getSellLandIds().then(ret => {
+            myContract.bravoCall(12, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [""], []).then(ret => {
                   console.log('setLandData 3 ');
 
                   landIdArray = ret;
@@ -103,8 +73,8 @@ function setLandData() {
                         console.log('sell land list item ' + i + ' id :' + landIdArray[i]
                               + '  price: ' + pricesArray[i]);
 
-
-                        var el = '<div class="land-for-sale"> <div class=" row col-12"> <img src="assets/images/Avatars/Avatar (2).svg" alt="profile thumnail" class="col-1 lfs-img"> <p class="col-3">Land Id: ' +
+                        var n = Math.floor(Math.random() * 10);
+                        var el = '<div class="land-for-sale"> <div class=" row col-12"> <img src="assets/images/Avatars/Avatar (' + n + ').svg" alt="profile thumnail" class="col-1 lfs-img"> <p class="col-3">Land Id: ' +
                               landIdArray[i] + '</p> <p class="col-4">Seller: Darth Vader</p> <p class="col-3">Price: ' + pricesArray[i] + ' OP</p> <button type="button" class="btn btn-primary float-end col-1" onclick="buyLand(\''
                               + landIdArray[i] + '\')"> Buy </button> </div> </div>';
 
@@ -124,9 +94,45 @@ function normalize(inp) {
       return inp / Math.pow(10, 18);
 }
 
+function start() {
+      var name = document.getElementById('start-name').value;
+      myContract.deltaCall(31, ["0xF6Aeab6EA7a65F7f1A0e4C76739Ec899403B05BE"], [name,""], []).then(() => {
+            console.log('#=> delta 31');
+            setTimeout(function () { 
+                  window.location.reload();
+                  //window.alert('1000')
+            }, 1000);
+      });
+}
+
+function getMyName() {
+
+      myContract.bravoCall(31, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [""], []).then(res => {
+            //myContract.name().then(res=>{
+
+            console.log('NAME: =====>>>:  ');
+            console.info(res);
+            if (res[0] == "") {
+                  console.log('NO NAME <<');
+                  setTimeout(function () {
+                        document.getElementById('start-div').style.display = 'block';
+                  }, 1000);
+
+            } else {
+                  console.log('HAS NAME :' + res[0]);
+                  document.getElementById('start-div').style.display = 'none';
+                  document.getElementById('boards-container').style.display = 'block';
+                  document.getElementById('my-name').innerHTML = res[0];
+                  setPageData();
+            }
+
+      });
+
+}
+
 function buyLand(landId) {
       console.log('Call for buy land id: ' + landId);
-      myLandContract.buyLand(landId).then(res =>
+      myContract.deltaCall(13, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [landId, ""], []).then(res =>
             console.info(res));
 }
 
@@ -134,8 +140,8 @@ function listLand() {
       var landId = document.getElementById('sell-landId').value;
       var price = document.getElementById('sell-price').value;
       console.log('Call for sell land -  id: ' + landId + '   price: ' + price);
-      myLandContract.listLandToSell(landId,price).then(res =>
-          console.info(res));
+      myContract.deltaCall(11, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [landId, ""], [price]).then(res =>
+            console.info(res));
 }
 
 
@@ -143,28 +149,27 @@ function listLand() {
 
 
 
-//#region Wallet  Functions
+//#region  WALLET FUNCTIONS CONTRACT INIT
 
 
-//#region         step 0: Start
+
 
 async function StartContract() {
+      document.getElementById('c-w-spinnet').style.display = 'block';
+
       console.log('Start Contract');
       // Step 1: get connect to metamask
       checkForMetamask().then(step1 => {
             if (step1) {
+
                   // step 2: init contract
                   tryInitContract().then(step2 => {
-
-                        if (window.location == 'http://127.0.0.1:8080/') {
-                              setPageData();
-                        }
-                        return Promise.resolve(true);
-                  })
-                  tryInitContract2().then(step2 => {
                         if (window.location == 'http://127.0.0.1:8080/') {
 
-                              setLandData();
+                              document.getElementById('connect-wallet-div').style.display = 'none';
+                              document.getElementById('c-w-spinnet').style.display = 'none';
+                              // document.getElementById('start-div').style.display = 'block';
+                              getMyName();
                         }
                         return Promise.resolve(true);
                   })
@@ -174,10 +179,6 @@ async function StartContract() {
 
 
 
-//#endregion
-
-
-//#region         step 1: check for metamask
 var provider;
 var signer;
 var hasMetamask = false;
@@ -203,10 +204,7 @@ function sendAlert(msg) {
       }, 1000)
 }
 
-//#endregion 
 
-
-//#region         step 2: init Contract
 
 var myContract;
 var isContractInit = false;
@@ -222,25 +220,5 @@ function tryInitContract() {
       }
 }
 
+//#endregion 
 
-
-var myLandContract;
-var isLandContractInit = false;
-
-function tryInitContract2() {
-      try {
-            myLandContract = new ethers.Contract(landContractAddress, landABI, signer);
-            isLandContractInit = true;
-            console.log('step 2 - contract init done.');
-            return Promise.resolve(true);
-      } catch (error) {
-            return Promise.resolve(false);
-      }
-}
-
- //#endregion
-
-
-
-
-//#endregion

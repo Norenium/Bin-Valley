@@ -53,169 +53,200 @@
             </div>
       </div>
 
-      <div class="connect-wallet" id="connect-wallet-div" hidden="true">
+      <div class="connect-wallet" id="connect-wallet-div" style="display: block;">
             <h4>You'll not see the correct info if your wallet is not connected.</h4>
-            <button class="connect-wallet-btn" id="connect-wallet-btn">Connect Wallet</button>
-      </div>
-      <div class="body-box">
-            <h1>Information board</h1>
-            <p>You will see all the information here. such as your inventory and assets and ...</p>
-            <p id="contract-address"></p>
-            <hr>
-            <div class="row col-12">
-                  <div class="col-6">
-                        <div class="control-unit">
-                              <p>Name: <span id="name">..........</span></p>
-                              <div class="row">
-                                    <div class="col-3">
-                                          <p id="health-title">health: </p>
-                                    </div>
-                                    <div class="col-9" style="padding-top:9px ;">
-
-                                          <div class="progress">
-                                                <div class="progress-bar bg-success " role="progressbar"
-                                                      style="width: 0%" aria-valuenow="80" aria-valuemin="0"
-                                                      aria-valuemax="100" id="health-bar">
-                                                      <span id="health-percentage">0%</span>
-                                                </div>
-                                          </div>
-                                    </div>
-                              </div>
-                              <div class="row">
-                                    <div class="col-3">
-                                          <p id="health-title">Fat: </p>
-                                    </div>
-                                    <div class="col-9" style="padding-top:9px ;">
-
-                                          <div class="progress">
-                                                <div class="progress-bar bg-warning " role="progressbar"
-                                                      style="width: 0%" aria-valuenow="20" aria-valuemin="0"
-                                                      aria-valuemax="100" id="fat-bar">
-                                                      <span id="fat-percentage">0%</span>
-                                                </div>
-                                          </div>
-                                          <span class="little-comment float-end"> ≈ <span id="fat-cal">
-                                                </span></span>
-
-                                    </div>
-                              </div>
-                              <div class="row">
-                                    <div class="col-3">
-                                          <p id="health-title">Energy: </p>
-                                    </div>
-                                    <div class="col-9" style="padding-top:9px ;">
-
-                                          <div class="progress">
-                                                <div class="progress-bar bg-danger " role="progressbar"
-                                                      style="width: 0%" aria-valuenow="100" aria-valuemin="0"
-                                                      aria-valuemax="100" id="energy-bar">
-                                                      <span id="energy-percentage"></span>
-                                                </div>
-                                          </div>
-                                          <span class="little-comment float-end"> ≈ <span id="energy-cal">
-                                                </span></span>
-                                    </div>
-
-
-                              </div>
-
-                        </div>
+            <button onclick="StartContract()" class="connect-wallet-btn" id="connect-wallet-btn">Connect Wallet</button>
+            <div class="d-flex justify-content-center"  style="display: block; margin-top: 20px;"
+            id="c-w-spinnet">
+                  <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
                   </div>
-                  <div class="col-6">
-                        <div class="control-unit  ">
-                              <p>Inventory: </p>
-                              <hr>
-                              <div class="row">
-                                    <div class="col-10 ">
-                                          <p id="health-title">OOPS: <span class="float-end"><span id="op-val">--</span>
-                                                      OP</span> </p>
-                                    </div>
-                                    <div class="col-10 ">
-                                          <p id="health-title">Bread: <span class="float-end"><span
-                                                            id="br-val">--</span> BR</span> </p>
-                                    </div>
+            </div>
+      </div>
+      <div class="connect-wallet" id="start-div" style="display: block;">
+            <h4>Start</h4>
+            <p>Seems you haven't been in the game yet. Pick a name and start:</p>
 
-                                    <div class="col-10 ">
-                                          <p id="health-title">Meat: <span class="float-end"><span id="mt-val">
-                                                            --</span> MT</span> </p>
-                                    </div>
-                                    <div class="col-10 ">
-                                          <p id="health-title">Electricity: <span class="float-end"><span
-                                                            id="mw-val">--</span> MW</span> </p>
-                                    </div>
-                                    <div class="col-10 ">
-                                          <p id="health-title">Wheat: <span class="float-end"><span
-                                                            id="wh-val">--</span> WH</span> </p>
-                                    </div>
+            <div class="land-for-sale col-12 row  bottom">
 
-                                    <div class="col-10 ">
-                                          <p id="health-title">Flour: <span class="float-end"><span
-                                                            id="fl-val">--</span> FL</span></p>
-                                    </div>
-                              </div>
-                        </div>
+
+                  <p class="col-6 row ">Enter a Name: <input type="text" id="start-name"> </p>
+                  <div class="col-6 float-end">
+                        <button type="button" class="btn btn-primary float-right inl col-6 align-bottom"
+                              onclick="start()" style="margin-top:20px;">START</button>
+
+                        </button>
                   </div>
             </div>
       </div>
 
-      <div class="body-box">
-            <h1>Control board</h1>
-            <p>You have access to game actions here:</p>
-            <hr>
-            <div class="row col-12">
-                  <div class="col-6">
+      <div id="boards-container" style="display: none;">
 
-
-                        <div class="control-unit">
-                              <p>Work:</p>
-                              <hr>
-                              <p>Hunting: </p>
-                              <p class="alert alert-danger" role="alert">You have not any hunting camp.</p>
-                              <p>Time to next hunt: 5H 22M</p>
-                        </div>
-                  </div>
-                  <div class="col-6">
-
-                        <div class="control-unit  ">
-                              <p>Workout: </p>
-                              <hr>
-
-
-
-                        </div>
-                  </div>
-            </div>
-      </div>
-
-      <div class="body-box">
-            <h1>Market board</h1>
-            <p>Lands and goods market here:</p>
-            <hr>
-
-            <div class="control-unit">
-                  <p>Land for sale:</p>
+            <div class="body-box">
+                  <h1>Information board</h1>
+                  <p>You will see all the information here. such as your inventory and assets and ...</p>
+                  <p id="contract-address"></p>
                   <hr>
-                  <div id="sell-list"></div>
+                  <div class="row col-12">
+                        <div class="col-6">
+                              <div class="control-unit">
+                                    <p>Name: <span id="my-name">..........</span></p>
+                                    <div class="row">
+                                          <div class="col-3">
+                                                <p id="health-title">health: </p>
+                                          </div>
+                                          <div class="col-9" style="padding-top:9px ;">
+
+                                                <div class="progress">
+                                                      <div class="progress-bar bg-success " role="progressbar"
+                                                            style="width: 0%" aria-valuenow="80" aria-valuemin="0"
+                                                            aria-valuemax="100" id="health-bar">
+                                                            <span id="health-percentage">0%</span>
+                                                      </div>
+                                                </div>
+                                          </div>
+                                    </div>
+                                    <div class="row">
+                                          <div class="col-3">
+                                                <p id="health-title">Fat: </p>
+                                          </div>
+                                          <div class="col-9" style="padding-top:9px ;">
+
+                                                <div class="progress">
+                                                      <div class="progress-bar bg-warning " role="progressbar"
+                                                            style="width: 0%" aria-valuenow="20" aria-valuemin="0"
+                                                            aria-valuemax="100" id="fat-bar">
+                                                            <span id="fat-percentage">0%</span>
+                                                      </div>
+                                                </div>
+                                                <span class="little-comment float-end"> ≈ <span id="fat-cal">
+                                                      </span></span>
+
+                                          </div>
+                                    </div>
+                                    <div class="row">
+                                          <div class="col-3">
+                                                <p id="health-title">Energy: </p>
+                                          </div>
+                                          <div class="col-9" style="padding-top:9px ;">
+
+                                                <div class="progress">
+                                                      <div class="progress-bar bg-danger " role="progressbar"
+                                                            style="width: 0%" aria-valuenow="100" aria-valuemin="0"
+                                                            aria-valuemax="100" id="energy-bar">
+                                                            <span id="energy-percentage"></span>
+                                                      </div>
+                                                </div>
+                                                <span class="little-comment float-end"> ≈ <span id="energy-cal">
+                                                      </span></span>
+                                          </div>
+
+
+                                    </div>
+
+                              </div>
+                        </div>
+                        <div class="col-6">
+                              <div class="control-unit  ">
+                                    <p>Inventory: </p>
+                                    <hr>
+                                    <div class="row">
+                                          <div class="col-10 ">
+                                                <p id="health-title">OOPS: <span class="float-end"><span
+                                                                  id="op-val">--</span>
+                                                            OP</span> </p>
+                                          </div>
+                                          <div class="col-10 ">
+                                                <p id="health-title">Bread: <span class="float-end"><span
+                                                                  id="br-val">--</span> BR</span> </p>
+                                          </div>
+
+                                          <div class="col-10 ">
+                                                <p id="health-title">Meat: <span class="float-end"><span id="mt-val">
+                                                                  --</span> MT</span> </p>
+                                          </div>
+                                          <div class="col-10 ">
+                                                <p id="health-title">Electricity: <span class="float-end"><span
+                                                                  id="mw-val">--</span> MW</span> </p>
+                                          </div>
+                                          <div class="col-10 ">
+                                                <p id="health-title">Wheat: <span class="float-end"><span
+                                                                  id="wh-val">--</span> WH</span> </p>
+                                          </div>
+
+                                          <div class="col-10 ">
+                                                <p id="health-title">Flour: <span class="float-end"><span
+                                                                  id="fl-val">--</span> FL</span></p>
+                                          </div>
+                                    </div>
+                              </div>
+                        </div>
+                  </div>
             </div>
-            <br>
-            <div class="control-unit">
-                  <p>List a land to sale:</p>
+
+            <div class="body-box">
+                  <h1>Control board</h1>
+                  <p>You have access to game actions here:</p>
                   <hr>
-                  <div>
-                        <div class="land-for-sale col-12 row">
+                  <div class="row col-12">
+                        <div class="col-6">
+
+                              <div class="control-unit  ">
+                                    <p>My Lands: </p>
+                                    <hr>
 
 
-                              <p class="col-6 row ">Enter Land Id: <input type="text" id="sell-landId"> </p>
-                              <p class="col-5">Enter Price: <input type="number" id="sell-price"> </p>
-                              <button type="button" class="btn btn-primary float-end col-1"
-                                    onclick="listLand()">List</button>
 
-                              </button>
+                              </div>
+                        </div>
+                        <div class="col-6">
 
+
+                              <div class="control-unit">
+                                    <p>Work:</p>
+                                    <hr>
+                                    <p>Hunting: </p>
+                                    <p class="alert alert-danger" role="alert">You have not any hunting camp.</p>
+                                    <p>Time to next hunt: 5H 22M</p>
+                              </div>
+                        </div>
+
+                  </div>
+            </div>
+
+            <div class="body-box">
+                  <h1>Market board</h1>
+                  <p>Lands and goods market here:</p>
+                  <hr>
+
+                  <div class="control-unit">
+                        <p>Land for sale:</p>
+                        <hr>
+                        <div id="sell-list"></div>
+                  </div>
+                  <br>
+                  <div class="control-unit">
+                        <p>List a land to sale:</p>
+                        <hr>
+                        <div>
+                              <div class="land-for-sale col-12 row">
+
+
+                                    <p class="col-6 row ">Enter Land Id: <input type="text" id="sell-landId"> </p>
+                                    <p class="col-5">Enter Price: <input type="number" id="sell-price"> </p>
+                                    <button type="button" class="btn btn-primary float-end col-1"
+                                          onclick="listLand()">List</button>
+
+                                    </button>
+
+                              </div>
                         </div>
                   </div>
             </div>
       </div>
+
+
+
       <script src="./assets/node_modules/ethers/dist/ethers.umd.min.js"></script>
       <script src="assets/js/consts.js"></script>
       <script src="assets/js/intract.js"></script>

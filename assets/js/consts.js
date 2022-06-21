@@ -1,20 +1,37 @@
-const contractAddress = "0x954D9595fC559550A3d86451d8e23b109b44798A";
-const landContractAddress = "0x2710e0c43D2D110dea6D8583010213dF69e795E9";
+// DevOps:	https://www.techtarget.com/searchitoperations/tip/How-to-start-DevOps-A-step-by-step-guide
+// const contractAddress = "0x954D9595fC559550A3d86451d8e23b109b44798A";
+/*
+FYI
+Token:	0x3B04C7553AEEf9797C50127B8C5d127B8384cF71
+Lands:	0x671C03c9202bf9e4fAFa90a052643D6fbD53a102
+Logic:	0xdA664437F90c911Ad3808FF88cC97f8AeC20f5bb
+Proxy:	0xF6Aeab6EA7a65F7f1A0e4C76739Ec899403B05BE
 
 
-const ABI =
-[
+
+
+
+*/
+const contractAddress = "0xF6Aeab6EA7a65F7f1A0e4C76739Ec899403B05BE"; 
+
+
+var ABI = [
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
 	{
 		"anonymous": false,
 		"inputs": [
 			{
-				"indexed": false,
+				"indexed": true,
 				"internalType": "address",
 				"name": "from",
 				"type": "address"
 			},
 			{
-				"indexed": false,
+				"indexed": true,
 				"internalType": "address",
 				"name": "to",
 				"type": "address"
@@ -22,33 +39,55 @@ const ABI =
 			{
 				"indexed": false,
 				"internalType": "uint256",
-				"name": "amount",
+				"name": "value",
 				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "string",
-				"name": "token",
-				"type": "string"
 			}
 		],
 		"name": "Transfer",
 		"type": "event"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			}
-		],
-		"name": "BodyEnergybalanceOf",
+		"inputs": [],
+		"name": "_paused",
 		"outputs": [
 			{
-				"internalType": "uint256",
+				"internalType": "bool",
 				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "command",
 				"type": "uint256"
+			},
+			{
+				"internalType": "address[]",
+				"name": "_addressData",
+				"type": "address[]"
+			},
+			{
+				"internalType": "string[]",
+				"name": "_stringData",
+				"type": "string[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "_uint256Data",
+				"type": "uint256[]"
+			}
+		],
+		"name": "alphaCall",
+		"outputs": [
+			{
+				"internalType": "address[]",
+				"name": "",
+				"type": "address[]"
 			}
 		],
 		"stateMutability": "view",
@@ -62,7 +101,7 @@ const ABI =
 				"type": "address"
 			}
 		],
-		"name": "BodyFatbalanceOf",
+		"name": "balanceOf",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -76,17 +115,50 @@ const ABI =
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
+				"internalType": "address[]",
+				"name": "to",
+				"type": "address[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "value",
+				"type": "uint256[]"
 			}
 		],
-		"name": "BodyHealthbalanceOf",
-		"outputs": [
+		"name": "batchTransfer",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "",
+				"name": "command",
 				"type": "uint256"
+			},
+			{
+				"internalType": "address[]",
+				"name": "_addressData",
+				"type": "address[]"
+			},
+			{
+				"internalType": "string[]",
+				"name": "_stringData",
+				"type": "string[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "_uint256Data",
+				"type": "uint256[]"
+			}
+		],
+		"name": "bravoCall",
+		"outputs": [
+			{
+				"internalType": "string[]",
+				"name": "",
+				"type": "string[]"
 			}
 		],
 		"stateMutability": "view",
@@ -95,55 +167,32 @@ const ABI =
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
+				"internalType": "uint256",
+				"name": "command",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address[]",
+				"name": "_addressData",
+				"type": "address[]"
+			},
+			{
+				"internalType": "string[]",
+				"name": "_stringData",
+				"type": "string[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "_uint256Data",
+				"type": "uint256[]"
 			}
 		],
-		"name": "BreadbalanceOf",
+		"name": "charlieCall",
 		"outputs": [
 			{
-				"internalType": "uint256",
+				"internalType": "uint256[]",
 				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			}
-		],
-		"name": "ElectricitybalanceOf",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			}
-		],
-		"name": "FlourbalanceOf",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
+				"type": "uint256[]"
 			}
 		],
 		"stateMutability": "view",
@@ -151,58 +200,7 @@ const ABI =
 	},
 	{
 		"inputs": [],
-		"name": "Hunt",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			}
-		],
-		"name": "MeatbalanceOf",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			}
-		],
-		"name": "OpousMoneybalanceOf",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			}
-		],
-		"name": "WheatbalanceOf",
+		"name": "decimals",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -217,44 +215,40 @@ const ABI =
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "amount",
+				"name": "command",
 				"type": "uint256"
-			}
-		],
-		"name": "eatBread",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
+			},
 			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "eatMeat",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
+				"internalType": "address[]",
+				"name": "_addressData",
+				"type": "address[]"
+			},
 			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
+				"internalType": "string[]",
+				"name": "_stringData",
+				"type": "string[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "_uint256Data",
+				"type": "uint256[]"
 			}
 		],
-		"name": "eatSandwich",
+		"name": "deltaCall",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "getAllPersonAddresses",
+		"name": "faucet",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getLatestAddressValue",
 		"outputs": [
 			{
 				"internalType": "address[]",
@@ -267,12 +261,12 @@ const ABI =
 	},
 	{
 		"inputs": [],
-		"name": "getMyBodyEnergy",
+		"name": "getLatestStringValue",
 		"outputs": [
 			{
-				"internalType": "uint256",
+				"internalType": "string[]",
 				"name": "",
-				"type": "uint256"
+				"type": "string[]"
 			}
 		],
 		"stateMutability": "view",
@@ -280,72 +274,7 @@ const ABI =
 	},
 	{
 		"inputs": [],
-		"name": "getMyBodyFat",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getMyBodyHealth",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getMyBread",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getMyElectricity",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getMyFlour",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getMyInventory",
+		"name": "getLatestUint256Value",
 		"outputs": [
 			{
 				"internalType": "uint256[]",
@@ -358,7 +287,20 @@ const ABI =
 	},
 	{
 		"inputs": [],
-		"name": "getMyMeat",
+		"name": "getLogicAddress",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getMyBalance",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -371,12 +313,12 @@ const ABI =
 	},
 	{
 		"inputs": [],
-		"name": "getMyOpousMoney",
+		"name": "getSecretary",
 		"outputs": [
 			{
-				"internalType": "uint256",
+				"internalType": "address",
 				"name": "",
-				"type": "uint256"
+				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -384,12 +326,12 @@ const ABI =
 	},
 	{
 		"inputs": [],
-		"name": "getMyWheat",
+		"name": "getSelfAddress",
 		"outputs": [
 			{
-				"internalType": "uint256",
+				"internalType": "address",
 				"name": "",
-				"type": "uint256"
+				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -397,183 +339,71 @@ const ABI =
 	},
 	{
 		"inputs": [],
-		"name": "getPersonIdNumerator",
+		"name": "name",
 		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getTS",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
 			{
 				"internalType": "string",
-				"name": "name",
+				"name": "",
 				"type": "string"
 			}
 		],
-		"name": "start",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
-	}
-]
-
-
-
-const landABI =
-[
+	},
 	{
 		"inputs": [
 			{
 				"internalType": "string[]",
-				"name": "landIds",
+				"name": "strings",
 				"type": "string[]"
-			},
-			{
-				"internalType": "uint256",
-				"name": "count",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint8[]",
-				"name": "landTypes",
-				"type": "uint8[]"
 			}
 		],
-		"name": "batchMint",
-		"outputs": [],
+		"name": "setLatestStringValue",
+		"outputs": [
+			{
+				"internalType": "string[]",
+				"name": "",
+				"type": "string[]"
+			}
+		],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [
 			{
-				"internalType": "string",
-				"name": "landId",
-				"type": "string"
+				"internalType": "uint256[]",
+				"name": "uints",
+				"type": "uint256[]"
 			}
 		],
-		"name": "buyLand",
-		"outputs": [],
+		"name": "setLatestUint256Value",
+		"outputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [
 			{
-				"internalType": "string",
-				"name": "landId",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "price",
-				"type": "uint256"
+				"internalType": "address",
+				"name": "adr",
+				"type": "address"
 			}
 		],
-		"name": "listLandToSell",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "landId",
-				"type": "string"
-			}
-		],
-		"name": "removeMyLandFromSellList",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "landId",
-				"type": "string"
-			},
-			{
-				"internalType": "uint8",
-				"name": "landtype",
-				"type": "uint8"
-			}
-		],
-		"name": "setLandType",
+		"name": "setLogicAddress",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "string",
-				"name": "landId",
-				"type": "string"
-			}
-		],
-		"name": "Transfer",
-		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "landId",
-				"type": "string"
-			}
-		],
-		"name": "transferLand",
+		"name": "setLogicsProxyAddress",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -581,17 +411,56 @@ const landABI =
 	{
 		"inputs": [
 			{
-				"internalType": "string",
-				"name": "a",
-				"type": "string"
-			},
+				"internalType": "address",
+				"name": "adr",
+				"type": "address"
+			}
+		],
+		"name": "setSecretary",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "symbol",
+		"outputs": [
 			{
 				"internalType": "string",
-				"name": "b",
+				"name": "",
 				"type": "string"
 			}
 		],
-		"name": "compareStrings",
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "totalSupply",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "value",
+				"type": "uint256"
+			}
+		],
+		"name": "transfer",
 		"outputs": [
 			{
 				"internalType": "bool",
@@ -599,129 +468,25 @@ const landABI =
 				"type": "bool"
 			}
 		],
-		"stateMutability": "pure",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getAllLands",
-		"outputs": [
-			{
-				"internalType": "string[]",
-				"name": "",
-				"type": "string[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getAllLandTypes",
-		"outputs": [
-			{
-				"internalType": "uint8[]",
-				"name": "",
-				"type": "uint8[]"
-			}
-		],
-		"stateMutability": "view",
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [
-			{
-				"internalType": "string",
-				"name": "landId",
-				"type": "string"
-			}
-		],
-		"name": "getLandOwner",
-		"outputs": [
 			{
 				"internalType": "address",
-				"name": "",
+				"name": "to",
 				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "landId",
-				"type": "string"
-			}
-		],
-		"name": "getLandPrice",
-		"outputs": [
+			},
 			{
 				"internalType": "uint256",
-				"name": "",
+				"name": "value",
 				"type": "uint256"
 			}
 		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "landId",
-				"type": "string"
-			}
-		],
-		"name": "getLandType",
-		"outputs": [
-			{
-				"internalType": "enum Lands.LandType",
-				"name": "",
-				"type": "uint8"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getNumberOfSellList",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getSellLandIds",
-		"outputs": [
-			{
-				"internalType": "string[]",
-				"name": "",
-				"type": "string[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getSellLandList",
-		"outputs": [
-			{
-				"internalType": "uint256[]",
-				"name": "",
-				"type": "uint256[]"
-			}
-		],
-		"stateMutability": "view",
+		"name": "transferFast",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ]
