@@ -1,8 +1,28 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0; 
 
-contract Tokens{
+    // TODO:
+    // add get set for food consts
+    //
 
+contract TokensLogic{
+
+    ITokensStorage TS;
+
+    // ==================== ADMINISTRATION ====================
+
+        address TSAddress;
+
+        function getTokensStorageAddress() public view returns(address) {
+            return TSAddress;
+        }
+
+        function setTokensStorageAddress(address adr) public {
+            TSAddress = adr;
+            TS = ITokensStorage(TSAddress);
+        }
+
+    //
     // ==================== STORAGE
         mapping(address => uint256) private _OpousMoneyBalances;
         mapping(address => uint256) private _ElectricityBalances;
@@ -25,6 +45,7 @@ contract Tokens{
 
 
     // ==================== FOODS ENERGY Consts
+
         // Minimum To Eat
         uint256 minMeat = 20;
         uint256 minBread = 20;
@@ -38,7 +59,6 @@ contract Tokens{
         uint256 breadFatFor100g = 0;
         uint256 meatSandwichFatFor100g = 1;
 
-
         // Maximum to have
         uint256 maxBodyHealth = 100;
         uint256 maxBodyFat = 5000;
@@ -46,22 +66,26 @@ contract Tokens{
     //
 
     function start (string memory name) public {
-        address sndr = tx.origin;
-        require(PersonId[sndr]==0,"adress is a person");
-        _OpousMoneyBalances[sndr] = 0;
-        _ElectricityBalances[sndr] = 0;
-        _WheatBalances[sndr] = 0;
-        _BreadBalances[sndr] = 0;
-        _FlourBalances[sndr] = 0;
-        _MeatBalances[sndr] = 0;
-        _BodyFatBalances[sndr] = 1000;
-        _BodyEnergyBalances[sndr] = 700;
-        _BodyHealthBalances[sndr] = 100;
+        address to = tx.origin;
+        require(TS.getPersonId(to)==0,"adress is a person");
+        uint256[] memory inp  = new uint256[](9);
+        inp[0] = 0;
+        inp[1] = 0;
+        inp[2] = 0;
+        inp[3] = 0;
+        inp[4] = 0;
+        inp[5] = 0;
+        inp[6] = 1000;
+        inp[7] = 700;
+        inp[8] = 100;
+        inp[9] = block.timestamp;
+        TS.setInventory(to, inp);
 
-        PersonIdToAddress[PersonIdNumerator] = sndr;
-        PersonId[sndr] = PersonIdNumerator;
-        PersonIdNumerator++;
-        PersonName[sndr] = name;
+        uint256 PIN = TS.getPersonIdNumerator();
+        TS.setPersonIdNumerator(PIN+1);
+        TS.setPersonIdToAddress(PIN, to);
+        TS.setPersonName(to, name);
+        TS.setPersonId(to, PIN);
     }
 
 
@@ -498,3 +522,72 @@ contract Tokens{
 
 }
 
+
+interface ITokensStorage{
+    
+    
+    // ==================== Methods
+
+        function getInventory(address to) external view returns(uint256[] memory);
+    
+        function setInventory(address to, uint256[] memory data) external;
+    
+        function getOpousMoneyBalances(address adr) external view returns(uint256);
+
+        function setOpousMoneyBalances(address adr, uint256 value) external;
+
+        function getElectricityBalances(address adr) external view returns(uint256);
+
+        function setElectricityBalances(address adr, uint256 value) external;
+
+        function getWheatBalances(address adr) external view returns(uint256);
+
+        function setWheatBalances(address adr, uint256 value) external;
+
+        function getBreadBalances(address adr) external view returns(uint256);
+
+        function setBreadBalances(address adr, uint256 value) external;
+
+        function getFlourBalances(address adr) external view returns(uint256);
+
+        function setFlourBalances(address adr, uint256 value) external;
+
+        function getMeatBalances(address adr) external view returns(uint256);
+
+        function setMeatBalances(address adr, uint256 value) external;
+
+        function getBodyFatBalances(address adr) external view returns(uint256);
+
+        function setBodyFatBalances(address adr, uint256 value) external;
+
+        function getBodyEnergyBalances(address adr) external view returns(uint256);
+
+        function setBodyEnergyBalances(address adr, uint256 value) external;
+
+        function getBodyHealthBalances(address adr) external view returns(uint256);
+
+        function setBodyHealthBalances(address adr, uint256 value) external;
+
+        function getPersonId(address adr) external view returns(uint256);
+
+        function setPersonId(address adr, uint256 value) external;
+        
+        function getBirthday(address adr) external view returns(uint256);
+
+        function setBirthday(address adr, uint256 value) external ;
+
+        function getPersonIdToAddress(uint id) external view returns(address);
+
+        function setPersonIdToAddress(uint id, address value) external;
+
+        function getPersonName(address adr) external view returns(string memory);
+
+        function setPersonName(address adr, string memory value) external;
+        
+        function getPersonIdNumerator() external view returns(uint256);
+
+        function setPersonIdNumerator(uint256 value) external;
+
+    //
+
+}

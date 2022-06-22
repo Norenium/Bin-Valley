@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0; 
 
-contract Lands{
+contract Lands{  
         string[]  lands = ["AS21","AT20","AT21","AT22","AT24","AU23","AU24","AW20","AW21","AW22","AX21","AX22","AS22","AS23","AS24","AS26","AT23","AN27","AN29","AN31"];
         uint8[]  types = [4,4,4,4,4,4,4,4,4,4,4,4,3,3,3,3,3,0,0,0];
 
@@ -16,6 +16,18 @@ contract Lands{
 
     }
 
+
+    address LSaddress;
+    ILandsStorage LS;
+
+    function getLandsStorageAddress() public view returns (address){
+        return LSaddress;
+    }
+
+    function setLandsStorageAddress(address adr) public{
+        LSaddress = adr;
+        LS = ILandsStorage(adr);
+    }
 
 
 
@@ -186,48 +198,152 @@ contract Lands{
         // ========== LAND
             function batchMint( string[] memory landIds, uint count, uint8[] memory landTypes) public {
                 for(uint i = 0; i < count; i++){
-                    _mint(msg.sender, landIds[i],landTypes[i]);
+                    _mint(tx.origin, landIds[i],landTypes[i]);
                     setLandType(landIds[i],landTypes[i]);
                 }
             }
 
+
+            string[]  adLands;
+            string[]  allLandsTemp;
+            uint256[]  allLandsTypeTemp;
             //Mint a land
-            function _mint(address to, string memory landId, uint8 landType) internal virtual {
+            function _mint(address to, string memory landId, uint256 landType) internal virtual {
                 require(to != address(0), "ERC721: mint to the zero address");
                 require(!_landExists(landId), "ERC721: token already minted");
 
+                uint256 n = LS.getNumberOfLands(to);
+                LS.setNumberOfLands(to,n+1);
 
-                _balances[to] += 1;
-                numberOfAllLands++;
-                _owners[landId] = to;
-                _addressLands[to].push(landId);
-                allLands.push(landId);
-                allLandsTypes.push(landType);
-                _landHasBuilding[landId] = false;
+                uint256 na = LS.getNumberOfAllLands();
+                LS.setNumberOfAllLands(na+1);
+
+                LS.setlandOwner(landId,to);
+
+                delete adLands;
+                adLands = LS.getAddressLands(to);
+                adLands.push(landId);
+                LS.setAddressLands(to, adLands);
+
+                delete allLandsTemp;
+                allLandsTemp = LS.getAllLands();
+                allLandsTemp.push(landId);
+                LS.setAllLands(allLandsTemp);
+
+                delete allLandsTypeTemp;
+                allLandsTypeTemp = LS.getAllLandsTypes();
+                allLandsTypeTemp.push(landType);
+                LS.setAllLandsTypes(allLandsTypeTemp);
+
+                LS.setLandHasBuilding(landId, false);
                 emit Transfer(address(0), to, landId);
 
             }
 
             // if a land ID exist
             function _landExists(string memory landId) internal view virtual returns (bool) {
-                return _owners[landId] != address(0);
+                return LS.getlandOwner(landId) != address(0);
             }    
+        //
+
+
+        // ========== PERMITS
+            function _mintPermit(address to, string memory permitId, uint256 permitType, uint256 landType) internal virtual {
+                require(to != address(0), "ERC721: mint to the zero address");
+                require(!_permitExists(permitId), "ERC721: token already minted");
+
+                LS.setPermitType(permitId, permitType);
+                LS.setPermitsLandType(permitId, landType);
+
+                
+                uint256 n = LS.getNumberOfPermits(to);
+                LS.setNumberOfPermits(to,n+1);
+
+
+                uint256 na = LS.getNumberOfAllPermits();
+                LS.setNumberOfAllPermits(na+1);
+
+                LS.setPermitOwner(permitId, to);
+ 
+                delete adLands;
+                adLands = LS.getAddressPermits(to);
+                adLands.push(permitId);
+                LS.setAddressPermits(to, adLands);
+
+                
+                delete allLandsTemp;
+                allLandsTemp = LS.getAllPermits();
+                allLandsTemp.push(permitId);
+                LS.setAllPermits(allLandsTemp);
+
+                delete allLandsTypeTemp;
+                allLandsTypeTemp = LS.getAllPermitsTypes();
+                allLandsTypeTemp.push(permitType);
+                LS.setAllPermitsTypes(allLandsTypeTemp);
+
+                LS.setPermitUsed(permitId, false);
+
+                emit TransferPermit(address(0), to, permitId);
+
+            }
+
+            // if a permit ID exist
+            function _permitExists(string memory permitId) internal view virtual returns (bool) {
+                return LS.getPermitOwner(permitId) != address(0);
+            }   
+
+            event TransferPermit( address from, address to, string permitId);                      
+
         //
 
         // ========== BUILDING
             function _buildBuilding(address to, string memory permitId, string memory landId) external virtual {
+                
                 require(to != address(0), "Build to the zero address");
                 require(_permitExists(permitId), "Permit not exist");
-                require(_owners[landId] == to, "Land is not yours");
-                require(!_permitUsed[permitId], "Permit has been used before");
-                require(!_landHasBuilding[landId], "Land has a building");
-                require(_permitsLandType[permitId]==_landType[landId],"types not same");
-                _permitUsed[permitId] = true;
-                _landHasBuilding[landId] = true;
+
+                require(LS.getlandOwner(landId) == to, "Land is not yours");
+                require(LS.getPermitOwner(permitId) == to, "Permit is not yours");
+                require(!LS.getPermitUsed(permitId), "Permit has been used before");
+
+                require(!LS.getLandHasBuilding(landId), "Land has a building");
+                require(LS.getPermitsLandType(permitId) == LS.getLandType(landId),"types not same");
+
+                LS.setPermitUsed(permitId, true);
+                LS.setLandHasBuilding(landId, true);
+
                 string memory buildingId = append(landId,permitId);
-                _buildingBalances[to] += 1;
-                numberOfAllBuildings++;
-                _buildingOwners[buildingId] = to;
+
+                                
+                uint256 n = LS.getNumberOfBuildings(to);
+                LS.setNumberOfBuildings(to,n+1);
+
+                uint256 na = LS.getNumberOfAllBuildings();
+                LS.setNumberOfAllBuildings(na+1);
+ 
+                LS.setBuildingOwner(buildingId, to);
+  
+  
+                delete adLands;
+                adLands = LS.getAddressBuildings(to);
+                adLands.push(buildingId);
+                LS.setAddressBuildings(to, adLands);
+
+                
+                delete allLandsTemp;
+                allLandsTemp = LS.getAllBuildings();
+                allLandsTemp.push(buildingId);
+                LS.setAllBuildings(allLandsTemp);
+
+
+                delete allLandsTypeTemp;
+                allLandsTypeTemp = LS.getAllBuildingsTypes();
+                uint bt = LS.getPermitType(permitId);
+                allLandsTypeTemp.push(bt);
+                LS.setAllBuildingsTypes(allLandsTypeTemp);
+                LS.setBuildingType(buildingId, bt);
+
+
                 _addressBuildings[to].push(buildingId);
                 allBuildings.push(buildingId);
                 allBuildingsTypes.push(_permitsType[permitId]);
@@ -247,71 +363,54 @@ contract Lands{
             }
         //
     
-        // ========== PERMITS
-            function _mintPermit(address to, string memory permitId, uint256 buildingType , uint256 landType) internal virtual {
-                require(to != address(0), "ERC721: mint to the zero address");
-                require(!_permitExists(permitId), "ERC721: token already minted");
-
-
-                _permitsLandType[permitId] = landType;
-                _permitBalances[to] += 1;
-                numberOfAllPermits++;
-                _permitOwners[permitId] = to;
-                _addressPermits[to].push(permitId);
-                allPermits.push(permitId);
-                allPermitsTypes.push(buildingType);
-                _permitUsed[permitId] = false;
-                emit TransferPermit(address(0), to, permitId);
-
-            }
-
-            // if a permit ID exist
-            function _permitExists(string memory permitId) internal view virtual returns (bool) {
-                return _permitOwners[permitId] != address(0);
-            }   
-
-            event TransferPermit( address from, address to, string permitId);                      
-
-        //
     //
 
 
     //  ==================== TRANSFER
 
         function transferLand ( address from, address to, string memory landId) private {
+
             require(to != address(0), "Send to the zero address");
             require(_landExists(landId), "Not existed");
             //require(msg.sender == from, "Not your own land");
-            require( _balances[from]>0, "Not any land existed");
+            require( LS.getNumberOfLands(from) > 0, "Not any land existed");
 
             removeLand(from, landId);
 
-            _balances[to] += 1;
-            _owners[landId] = to;
-            _addressLands[to].push(landId);
+            uint256 n = LS.getNumberOfLands(to);
+            LS.setNumberOfLands(to,n+1);
+            LS.setlandOwner(landId, to);
+
+            delete adLands;
+            adLands = LS.getAddressLands(to);
+            adLands.push(landId);
+            LS.setAddressLands(to, adLands);
 
             emit Transfer(address(0), to, landId);
 
         }
 
         function removeLand( address from, string memory landId) internal { // problem here?
-            string[] memory temp = _addressLands[from];
-            uint256 number = _balances[from];
+            uint256 number = LS.getNumberOfLands(from);
+            require(number>1 , "#2 has not any land");
+            string[] memory temp = LS.getAddressLands(from);
             string[] memory newArray = new string[](number-1);
             if(number == 1){
-                _addressLands[from] = newArray;
+                LS.setAddressLands(from,newArray);
             }else{
                 uint counter =0;
                 for(uint i=0; i < number; i++){
-                        if( compareStrings( temp[i], landId ) ){
-                            newArray[counter]=(landId);
-                            counter++;
-                        }
+                    if( compareStrings( temp[i], landId ) ){
+                        
+                    }else{
+                        newArray[counter]=(landId);
+                        counter++;
+                    }
                 }
-                _addressLands[from] = newArray;//???
+               LS.setAddressLands(from,newArray);
             }
             
-            _balances[from]--;
+           LS.setNumberOfLands(from,number-1);
         }
 
         function compareStrings(string memory a, string memory b) public pure returns (bool) {
@@ -332,61 +431,122 @@ contract Lands{
 
 
             function listLandToSell(string memory landId, uint256 price) public {
-                require(_owners[landId] == tx.origin,"Not yours");
-                _landSellPrices[landId] = price;
-                sellLandIds.push(landId);
-                numberOfSellList++;
+                require( LS.getlandOwner(landId) == tx.origin,"Not yours");
+                
+                delete adLands;
+                adLands = LS.getLandsToSellId();
+                adLands.push(landId);
+                LS.setLandsToSellId( adLands );
+
+                delete allLandsTypeTemp;
+                allLandsTypeTemp = LS.getLandsToSellPrice();
+                allLandsTypeTemp.push(price);
+                LS.setLandsToSellPrice(allLandsTypeTemp);
+
             }
 
 
 
             function removeMyLandFromSellList (string memory landId) public {
-                require(_owners[landId] == tx.origin,"Not yours");
+                require( LS.getlandOwner(landId) == tx.origin,"Not yours");
                 removeLandFromSellList(landId);
             }
 
             function removeLandFromSellList (string memory landId) private  {
-                _landSellPrices[landId] = 0;
-                
-                string[] memory temp = sellLandIds;
+              
+                //   remove the id
+                string[] memory temp = LS.getLandsToSellId();
                 uint counter = 0;
-                //string[] memory newArray = new string[](numberOfSellList-1);
-                //sellLandIds.length = 0;
-                delete sellLandIds;
-                sellLandIds = new string[](numberOfSellList-1);
-                for(uint i=0; i < numberOfSellList; i++){
-                        if( compareStrings( temp[i], landId ) ){
-                            
-                        }else{
-                            sellLandIds[counter]=temp[i];     
-                            counter++;
-                            //sellLandIds.push(temp[i]);     
+                uint index = 0;
 
+                delete adLands;
+                adLands = new string[](temp.length-1);
+
+                for(uint i=0; i < temp.length; i++){
+                        if( compareStrings( temp[i], landId ) ){
+                            index = i;
+                        }else{
+                            adLands[counter]=temp[i];     
+                            counter++;
                         }
                 }
-                //sellLandIds = newArray;
-                numberOfSellList--;
-            }
 
-            struct LandSellTicket{
-                string landId;
-                uint256 price;
-            }
+                LS.setLandsToSellId(adLands);
 
-            function getSellLandList() public view returns(uint256[] memory ){
 
-                uint256[] memory results = new uint256[](numberOfSellList);
+                //   remove the price
+                uint256[] memory tempPrices = LS.getLandsToSellPrice();
+                counter = 0;
 
-                for(uint i=0; i < numberOfSellList; i++){
-                    string memory id = sellLandIds[i];
-                    results[i]= _landSellPrices[id];
+                delete allLandsTypeTemp;
+                allLandsTypeTemp = new uint256[](tempPrices.length-1);
+
+                for(uint i=0; i < tempPrices.length; i++){
+                        if( index == i ){
+                            
+                        }else{
+                            allLandsTypeTemp[counter]=tempPrices[i];     
+                            counter++;
+                        }
                 }
-                return results;
+
+                LS.setLandsToSellPrice(tempPrices);
             }
 
-            function buyLand(string memory landId) public {
-                uint256 price = _landSellPrices[landId];
+            
+
+            function getLandPrice (string memory landId) private returns(uint256) {
+              
+                //   Finding the id index
+                string[] memory temp = LS.getLandsToSellId();
+                uint counter = 0;
+                uint index = 0;
+                uint256 result = 0;
+
+                delete adLands;
+                adLands = new string[](temp.length-1);
+
+                for(uint i=0; i < temp.length; i++){
+                        if( compareStrings( temp[i], landId ) ){
+                            index = i;
+                        }else{
+                            adLands[counter]=temp[i];     
+                            counter++;
+                        }
+                }
+
+                
+                //finding id price
+                uint256[] memory tempPrices = LS.getLandsToSellPrice();
+                counter = 0;
+
+                delete allLandsTypeTemp;
+                allLandsTypeTemp = new uint256[](tempPrices.length-1);
+
+                for(uint i=0; i < tempPrices.length; i++){
+                        if( index == i ){
+                            result = tempPrices[i];
+                        }else{
+                            allLandsTypeTemp[counter]=tempPrices[i];     
+                            counter++;
+                        }
+                }
+
+                return result;
+            }
+
+            function getSellLandListPrice() public view returns(uint256[] memory ){
+                return LS.getLandsToSellPrice();
+            }
+
+            function getSellLandListId() public view returns(string[] memory ){
+                return LS.getLandsToSellId();
+            }
+
+            function buyLand(string memory landId, uint256 buyPrice) public {
+                uint256 price = getLandPrice(landId);
                 require(price>0); // listed ad sell
+                require(price == buyPrice); // check correctness
                 //require(_balance > price)  // check for enught balance
 
                 // Transfer the fee
@@ -405,5 +565,138 @@ contract Lands{
         function Tro() private view returns (address){
             return tx.origin;
         }
+    //
+}
+
+
+
+interface ILandsStorage{
+
+    // ========== Lands
+
+        function getlandOwner(string calldata landId) external view returns(address);
+
+        function setlandOwner(string calldata landId, address adr) external;
+
+        function getNumberOfLands(address adr) external view returns(uint256);
+
+        function setNumberOfLands(address adr, uint256 number) external;
+
+        function getAddressLands(address adr) external view returns(string[] memory);
+
+        function setAddressLands(address adr, string[] calldata lands) external ;
+
+        function getLandType(string calldata landId) external view returns(uint256);
+
+        function setLandType(string calldata landId, uint256 landType) external;
+
+        function getLandHasBuilding(string calldata landId) external view returns(bool);
+        
+        function setLandHasBuilding(string calldata landId, bool state) external;
+
+        function getLandsBuilding(string calldata landId) external view returns(string memory);
+
+        function setLandsBuilding(string calldata landId, string memory building) external;
+
+        function getAllLands() external view returns(string[] memory);
+
+        function setAllLands(string[] memory lands) external;
+        
+        function getAllLandsTypes() external view returns(uint256[] memory);
+
+        function setAllLandsTypes(uint256[] memory landsTypes) external ;
+
+        function getNumberOfAllLands() external view returns(uint256);
+
+        function setNumberOfAllLands(uint256 number) external;
+
+        function getLandsToSellId() external view returns(string[] memory);
+
+        function setLandsToSellId(string[] memory lands) external;
+
+        function getLandsToSellPrice() external view returns(uint256[] memory);
+
+        function setLandsToSellPrice(uint256[] memory lands) external;
+
+    //
+
+
+    // ========== Permits
+
+        function getPermitOwner(string calldata PermitId) external view returns(address);
+
+        function setPermitOwner(string calldata PermitId, address adr) external;
+        
+        function getPermitType(string calldata PermitId) external view returns(uint256);
+
+        function setPermitType(string calldata PermitId, uint256 permitType) external ;
+
+        function getPermitsLandType(string calldata PermitId) external view returns(uint256);
+
+        function setPermitsLandType(string calldata PermitId, uint256 landType) external ;
+
+        function getNumberOfPermits(address adr) external view returns(uint256);
+
+        function setNumberOfPermits(address adr, uint256 number) external;
+
+        function getAddressPermits(address adr) external view returns(string[] memory);
+
+        function setAddressPermits(address adr, string[] calldata Permits) external ;
+
+        function getPermitUsed(string calldata landId) external view returns(bool);
+
+        function setPermitUsed(string calldata landId, bool state) external;
+
+        function getAllPermits() external view returns(string[] memory);
+
+        function setAllPermits(string[] memory Permits) external ;
+
+        function getAllPermitsTypes() external view returns(uint256[] memory);
+
+        function setAllPermitsTypes(uint256[] memory PermitsTypes) external;
+
+        function getNumberOfAllPermits() external view returns(uint256);
+
+        function setNumberOfAllPermits(uint256 number) external;
+
+        function getPermitsToSellId() external view returns(string[] memory);
+
+        function setPermitsToSellId(string[] memory Permits) external;
+
+        function getPermitsToSellPrice() external view returns(string[] memory);
+
+        function setPermitsToSellPrice(string[] memory Permits) external;
+    //
+
+    // ========== Buildings
+
+        function getAllBuildings() external view returns(string[] memory);
+
+        function setAllBuildings(string[] memory Buildings) external;
+
+        function getAllBuildingsTypes() external view returns(uint256[] memory);
+
+        function setAllBuildingsTypes(uint256[] memory BuildingsTypes) external;
+
+        function getNumberOfAllBuildings() external view returns(uint256);
+
+        function setNumberOfAllBuildings(uint256 number) external;
+
+        function getBuildingOwner(string calldata BuildingId) external view returns(address);
+
+        function setBuildingOwner(string calldata BuildingId, address adr) external;
+
+        function getAddressBuildings(address adr) external view returns(string[] memory);
+
+        function setAddressBuildings(address adr, string[] memory Buildings) external;
+
+        function getNumberOfBuildings(address adr) external view returns(uint256);
+
+        function setNumberOfBuildings(address adr, uint256 number) external;      
+
+        function getBuildingType(string calldata BuildingId) external view returns(uint256);
+
+        function setBuildingType(string calldata BuildingId, uint256 BuildingType) external;
+
     //
 }

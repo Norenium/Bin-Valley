@@ -14,6 +14,7 @@ contract Tokens{
         mapping(address => uint256) private _BodyFatBalances;
         mapping(address => uint256) private _BodyEnergyBalances;
         mapping(address => uint256) private _BodyHealthBalances;
+        mapping(address => uint256) private _Birthday;
         mapping(address => uint256) private _PersonId;
         mapping(uint256 => address) private _PersonIdToAddress;
         mapping(address =>  string) private _PersonName;
@@ -35,6 +36,7 @@ contract Tokens{
             results[6] = _BodyHealthBalances[to];
             results[7] = _BodyFatBalances[to];
             results[8] = _BodyEnergyBalances[to];
+            results[9] = _Birthday[to];
             return  results;
         }
 
@@ -48,6 +50,7 @@ contract Tokens{
             _BodyHealthBalances[to] = data[6];
             _BodyFatBalances[to] = data[7];
             _BodyEnergyBalances[to] = data[8];
+             _Birthday[to] = data[9];
         }
 
     //
@@ -55,15 +58,12 @@ contract Tokens{
 
     // ==================== Methods - Standard
 
-        function setInventory(address adr, uint256 value) public {
-            _OpousMoneyBalances[adr] = value;
-        }
 
-        function getPersonIdNumerator(address adr) public view returns(uint256) {
+        function getOpousMoneyBalances(address adr) public view returns(uint256) {
             return _OpousMoneyBalances[adr];
         }
 
-        function setPersonIdNumerator(address adr, uint256 value) public {
+        function setOpousMoneyBalances(address adr, uint256 value) public {
             _OpousMoneyBalances[adr] = value;
         }
 
@@ -139,6 +139,14 @@ contract Tokens{
             _PersonId[adr] = value;
         }
 
+        function getBirthday(address adr) public view returns(uint256) {
+            return _Birthday[adr];
+        }
+
+        function setBirthday(address adr, uint256 value) public {
+            _Birthday[adr] = value;
+        }
+
         function getPersonIdToAddress(uint id) public view returns(address) {
             return _PersonIdToAddress[id];
         }
@@ -172,9 +180,13 @@ interface ITokensStorage{
     
     // ==================== Methods
 
-        function getPersonIdNumerator(address adr) external view returns(uint256);
+        function getInventory(address to) external view returns(uint256[] memory);
+    
+        function setInventory(address to, uint256[] memory data) external;
+    
+        function getOpousMoneyBalances(address adr) external view returns(uint256);
 
-        function setPersonIdNumerator(address adr, uint256 value) external;
+        function setOpousMoneyBalances(address adr, uint256 value) external;
 
         function getElectricityBalances(address adr) external view returns(uint256);
 
@@ -211,6 +223,10 @@ interface ITokensStorage{
         function getPersonId(address adr) external view returns(uint256);
 
         function setPersonId(address adr, uint256 value) external;
+        
+        function getBirthday(address adr) external view returns(uint256);
+
+        function setBirthday(address adr, uint256 value) external ;
 
         function getPersonIdToAddress(uint id) external view returns(address);
 

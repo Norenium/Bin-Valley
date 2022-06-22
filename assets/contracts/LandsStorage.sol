@@ -84,7 +84,7 @@ contract Lands{
             string[] landsToSellId;
 
             // prices for the lands which are listed to sell. in the same order of the landsToSellId
-            string[] landsToSellPrice;
+            uint256[] landsToSellPrice;
         //
 
         // ================ Permits
@@ -151,6 +151,9 @@ contract Lands{
             
             // Mapping owner address to number of buildings
             mapping(address => uint256) private _numberOfBuildings;
+
+            // Mapping buildingId to buildingType
+            mapping(string => uint256) private _buildingType;
 
         //
 
@@ -249,13 +252,13 @@ contract Lands{
                 landsToSellId = lands;
             }
 
-            function getLandsToSellPrice() public view returns(string[] memory){
+            function getLandsToSellPrice() public view returns(uint256[] memory){
                 return landsToSellPrice;
             }
 
-            function setLandsToSellPrice(string[] memory lands) public {
+            function setLandsToSellPrice(uint256[] memory lands) public {
                 delete landsToSellPrice;
-                landsToSellPrice = new string[](lands.length);
+                landsToSellPrice = new uint256[](lands.length);
                 landsToSellPrice = lands;
             }
   
@@ -271,6 +274,22 @@ contract Lands{
 
             function setPermitOwner(string calldata PermitId, address adr) public {
                 _permitsOwners[PermitId] = adr;
+            }
+
+            function getPermitType(string calldata PermitId) public view returns(uint256){
+                return _permitType[PermitId];
+            }
+
+            function setPermitType(string calldata PermitId, uint256 permitType) public {
+                _permitType[PermitId] = permitType;
+            }
+
+            function getPermitsLandType(string calldata PermitId) public view returns(uint256){
+                return _permitsLandType[PermitId];
+            }
+
+            function setPermitsLandType(string calldata PermitId, uint256 landType) public {
+                _permitsLandType[PermitId] = landType;
             }
 
             function getPermitUsed(string calldata landId) public view returns(bool){
@@ -401,13 +420,22 @@ contract Lands{
             function setNumberOfBuildings(address adr, uint256 number) public {
                 _numberOfBuildings[adr] = number;
             }
+            
+            function getBuildingType(string calldata BuildingId) public view returns(uint256){
+                return _buildingType[BuildingId];
+            }
+
+            function setBuildingType(string calldata BuildingId, uint256 BuildingType) public {
+                _buildingType[BuildingId] = BuildingType;
+            }
+
         //
     //
 
 }
 
 
-interface ITokenStorage{
+interface ILandsStorage{
 
     // ========== Lands
 
@@ -451,9 +479,9 @@ interface ITokenStorage{
 
         function setLandsToSellId(string[] memory lands) external;
 
-        function getLandsToSellPrice() external view returns(string[] memory);
+        function getLandsToSellPrice() external view returns(uint256[] memory);
 
-        function setLandsToSellPrice(string[] memory lands) external;
+        function setLandsToSellPrice(uint256[] memory lands) external;
 
     //
 
@@ -463,6 +491,14 @@ interface ITokenStorage{
         function getPermitOwner(string calldata PermitId) external view returns(address);
 
         function setPermitOwner(string calldata PermitId, address adr) external;
+        
+        function getPermitType(string calldata PermitId) external view returns(uint256);
+
+        function setPermitType(string calldata PermitId, uint256 permitType) external ;
+
+        function getPermitsLandType(string calldata PermitId) external view returns(uint256);
+
+        function setPermitsLandType(string calldata PermitId, uint256 landType) external ;
 
         function getNumberOfPermits(address adr) external view returns(uint256);
 
@@ -471,10 +507,6 @@ interface ITokenStorage{
         function getAddressPermits(address adr) external view returns(string[] memory);
 
         function setAddressPermits(address adr, string[] calldata Permits) external ;
-
-        function getPermitType(string calldata PermitId) external view returns(uint256);
-
-        function setPermitType(string calldata PermitId, uint256 PermitType) external;
 
         function getPermitUsed(string calldata landId) external view returns(bool);
 
@@ -501,7 +533,7 @@ interface ITokenStorage{
         function setPermitsToSellPrice(string[] memory Permits) external;
     //
 
-        // ========== Buildings
+    // ========== Buildings
 
         function getAllBuildings() external view returns(string[] memory);
 
@@ -525,7 +557,11 @@ interface ITokenStorage{
 
         function getNumberOfBuildings(address adr) external view returns(uint256);
 
-        function setNumberOfBuildings(address adr, uint256 number) external;
+        function setNumberOfBuildings(address adr, uint256 number) external;        
+            
+        function getBuildingType(string calldata BuildingId) external view returns(uint256);
+
+        function setBuildingType(string calldata BuildingId, uint256 BuildingType) external;
     //
 }
 
