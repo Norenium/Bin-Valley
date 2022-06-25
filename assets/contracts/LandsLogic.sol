@@ -1,197 +1,94 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0; 
 
-contract Lands{  
+contract LandsLogic{  
+
+    // ====================  ADMINISTRATIVE
+
         string[]  lands = ["AS21","AT20","AT21","AT22","AT24","AU23","AU24","AW20","AW21","AW22","AX21","AX22","AS22","AS23","AS24","AS26","AT23","AN27","AN29","AN31"];
         uint8[]  types = [4,4,4,4,4,4,4,4,4,4,4,4,3,3,3,3,3,0,0,0];
 
-    function initializer() public {  //#=> replace public with internal or ... &&  add secretary origin
+        function initializer() public {  //#=> replace public with internal or ... &&  add secretary origin
 
-        batchMint(lands , 20,types );
-        listLandToSell("AS21",100);
-        listLandToSell("AT20",200);
-        listLandToSell("AU23",330);
-        listLandToSell("AW20",400);
-
-
-    }
+            batchMint(lands , 20,types );
+            listLandToSell("AS21",100);
+            listLandToSell("AT20",200);
+            listLandToSell("AU23",330);
+            listLandToSell("AW20",400);
 
 
-    address LSaddress;
-    ILandsStorage LS;
-
-    function getLandsStorageAddress() public view returns (address){
-        return LSaddress;
-    }
-
-    function setLandsStorageAddress(address adr) public{
-        LSaddress = adr;
-        LS = ILandsStorage(adr);
-    }
-
-
-
-
-
-    // ==================== STORAGE 
-
-
-        struct Land{
-            string landID;
-            //address owner; // maybe shuld be added later.
-            LandType landType;
-            //uint256 allocationTimeStamp;
-        }
-
-        enum LandType{
-            Forest,             // 0
-            Empty,              // 1
-            Mountain,           // 2
-            Agricultural,       // 3
-            Urban,              // 4
-            Coast               // 5
         }
 
 
-        enum BuildingType{
-            HuntingCamp,    // 0 HC 22
-            WheatFarm,      // 1 WF 33
-            Grinder,        // 2 GD 44
-            Bakeshop,       // 3 BS 55
-            WindMill,       // 4 WM 66
-            House           // 5 HS 77
-            // ===== All types
-                /*
-                ForestHuntingCamp,      // 10
-                MountainHuntingCamp,    // 11
-                WheatFarm,              // 20
-                TomatoCroft,            // 21            
-                LettuceCroft,           // 22        
-                Residental,             // 40
-                Commercial,             // 50
-                Industrial              // 60
-                */
-            //
+        address LSaddress;
+        ILandsStorage LS;
+
+        function getLandsStorageAddress() public view returns (address){
+            return LSaddress;
+        }
+
+        function setLandsStorageAddress(address adr) public{
+            LSaddress = adr;
+            LS = ILandsStorage(adr);
         }
 
 
+        address TLaddress;
+        ITokenLogic TL;
 
-        // Mapping from token ID to owner address
-        mapping(string => address) private _owners;
+        function getTokenLogicAddress() public view returns (address){
+            return TLaddress;
+        }
 
-        // Mapping owner address to token count
-        mapping(address => uint256) private _balances;
-
-        // Mapping owner address to lands
-        mapping(address => string[]) private _addressLands;
-
-        // Mapping from token ID to owner address
-        mapping(string => uint256) private _landType;
-
-        
-        // Mapping from token ID to has building
-        mapping(string => bool) private _landHasBuilding;
-
-        string[] allLands;
-        uint256[] allLandsTypes;
-
-        uint256 numberOfAllLands;
-
-
-        // ================ Permits
-            uint256 numberOfAllPermits;
-            string[] allPermits;
-            uint256[] allPermitsTypes;
-            
-            // Mapping from token ID to owner address
-            mapping(string => address) private _permitOwners;
-                        
-            // Mapping from token ID to used
-            mapping(string => bool) private _permitUsed;
-
-            // Mapping owner address to token count
-            mapping(address => uint256) private _permitBalances;
-
-            // Mapping owner address to token count
-            mapping(string => uint256) private _permitsType;
-
-            // Mapping owner address to lands - Defines the permit is alowing to build the builing in  what land type
-            mapping(string => uint256) private _permitsLandType;
-
-            // Mapping owner address to lands
-            mapping(address => string[]) private _addressPermits;
-        //
-        
-        // ================ Buildings
-            uint256 numberOfAllBuildings;
-            string[] allBuildings;
-            uint256[] allBuildingsTypes;
-            
-            // Mapping from token ID to owner address
-            mapping(string => address) private _buildingOwners;
-
-            // Mapping owner address to token count
-            mapping(address => uint256) private _buildingBalances;
-
-            // Mapping owner address to lands
-            mapping(address => string[]) private _addressBuildings;
-        //
-
-
+        function setTokenLogicAddress(address adr) public{
+            LSaddress = adr;
+            TL = ITokenLogic(adr);
+        }
 
     //
 
-    //  ==================== GET SET
+
+    //  ==================== GET
     
+ 
+            function getAddressLands(address adr) public view returns(string[] memory ){
+                return LS.getAddressLands(adr);
+            }
+            
+            function getAllLands() public view returns(string[] memory ){
+                return LS.getAllLands();
+            }
 
-        function getMyLands() public view returns (string[] memory){
-            return _addressLands[Tro()];
-        }
-        
-        function getMyPermits() public view returns (string[] memory){
-            return _addressPermits[Tro()];
-        }
-        
-        function getMyBuildings() public view returns (string[] memory){
-            return _addressBuildings[Tro()];
-        }
-        
-        function setLandType (string memory landId, uint256 landtype) private {
-            _landType[landId] = landtype;
-        }
+            function getAllLandsTypes() public view returns(uint256[] memory ){
+                return LS.getAllLandsTypes();
+            }
 
-        /*
-        function getLandType (string memory landId) public view returns(LandType){
-            return _landType[landId];
-        }*/
+            function setlandOwner(string calldata landId) external view returns(address){
+                return LS.getlandOwner(landId);
+            }
 
+            function getSellLandListPrice() public view returns(uint256[] memory ){
+                return LS.getLandsToSellPrice();
+            }
 
-        function getAllLands() public view returns(string[] memory){
-            return allLands;
-        }
+            function getSellLandListId() public view returns(string[] memory ){
+                return LS.getLandsToSellId();
+            }
 
-        function getAllLandTypes() public view returns(uint256[] memory){
-            return allLandsTypes;
-        }
-        
-        function getLandOwner(string memory landId) public view returns(address){
-            return _owners[landId];
-        } 
+            function getLandBuilding(string calldata landId) public view returns (string memory){
+                return LS.getLandsBuilding(landId);
+            }
 
-        function getLandPrices(string memory landId) public view returns(uint256){
-            return _landSellPrices[landId];
-        }
+            function getMyLands() public view returns (string[] memory){
+                return LS.getAddressLands(tx.origin);
+            }
 
-        function getNumberOfSellList() public view returns(uint256){
-            return numberOfSellList;
-        }
-
-        function getSellLandIds() public view returns(string[] memory){
-            return sellLandIds;
-        }
+            function getMyBuildings() public view returns (string[] memory){
+                return LS.getAddressBuildings(tx.origin);
+            }
 
 
-    //
+    //_addressLands
 
     //  ==================== MINT
         
@@ -199,7 +96,7 @@ contract Lands{
             function batchMint( string[] memory landIds, uint count, uint8[] memory landTypes) public {
                 for(uint i = 0; i < count; i++){
                     _mint(tx.origin, landIds[i],landTypes[i]);
-                    setLandType(landIds[i],landTypes[i]);
+                    //setLandType(landIds[i],landTypes[i]);
                 }
             }
 
@@ -248,9 +145,16 @@ contract Lands{
 
 
         // ========== PERMITS
-            function _mintPermit(address to, string memory permitId, uint256 permitType, uint256 landType) internal virtual {
+         
+
+
+            function _mintPermit(address to, string memory permitId, uint256 permitType, uint256 landType) public {
                 require(to != address(0), "ERC721: mint to the zero address");
                 require(!_permitExists(permitId), "ERC721: token already minted");
+
+
+                TL.pay(0xA02B2223d1ee0584545ffc804c518693C1d76de0,100);
+
 
                 LS.setPermitType(permitId, permitType);
                 LS.setPermitsLandType(permitId, landType);
@@ -288,7 +192,7 @@ contract Lands{
             }
 
             // if a permit ID exist
-            function _permitExists(string memory permitId) internal view virtual returns (bool) {
+            function _permitExists(string memory permitId) private view returns (bool) {
                 return LS.getPermitOwner(permitId) != address(0);
             }   
 
@@ -297,7 +201,8 @@ contract Lands{
         //
 
         // ========== BUILDING
-            function _buildBuilding(address to, string memory permitId, string memory landId) external virtual {
+
+            function _buildBuilding(address to, string memory permitId, string memory landId) public {
                 
                 require(to != address(0), "Build to the zero address");
                 require(_permitExists(permitId), "Permit not exist");
@@ -343,18 +248,12 @@ contract Lands{
                 LS.setAllBuildingsTypes(allLandsTypeTemp);
                 LS.setBuildingType(buildingId, bt);
 
-
-                _addressBuildings[to].push(buildingId);
-                allBuildings.push(buildingId);
-                allBuildingsTypes.push(_permitsType[permitId]);
+              
                 emit TransferBuilding(address(0), to, buildingId);
 
             }
 
-            // if a permit ID exist
-            function _buildingExists(string memory landId) internal view virtual returns (bool) {
-                return _owners[landId] != address(0);
-            }   
+
 
             event TransferBuilding( address from, address to, string buildingId);                      
 
@@ -390,7 +289,7 @@ contract Lands{
 
         }
 
-        function removeLand( address from, string memory landId) internal { // problem here?
+        function removeLand( address from, string memory landId) private { // problem here?
             uint256 number = LS.getNumberOfLands(from);
             require(number>1 , "#2 has not any land");
             string[] memory temp = LS.getAddressLands(from);
@@ -425,9 +324,9 @@ contract Lands{
         // ===== LANDS
 
             // Mapping from token ID to owner address
-            mapping(string => uint256) private _landSellPrices;
-            uint256 numberOfSellList;
-            string[] sellLandIds;
+            //mapping(string => uint256) private _landSellPrices;
+            //uint256 numberOfSellList;
+            //string[] sellLandIds;
 
 
             function listLandToSell(string memory landId, uint256 price) public {
@@ -492,9 +391,7 @@ contract Lands{
 
                 LS.setLandsToSellPrice(tempPrices);
             }
-
             
-
             function getLandPrice (string memory landId) private returns(uint256) {
               
                 //   Finding the id index
@@ -535,30 +432,53 @@ contract Lands{
                 return result;
             }
 
-            function getSellLandListPrice() public view returns(uint256[] memory ){
-                return LS.getLandsToSellPrice();
-            }
-
-            function getSellLandListId() public view returns(string[] memory ){
-                return LS.getLandsToSellId();
-            }
-
             function buyLand(string memory landId, uint256 buyPrice) public {
                 uint256 price = getLandPrice(landId);
                 require(price>0); // listed ad sell
                 require(price == buyPrice); // check correctness
+
+                // Payment
+                address seller = LS.getlandOwner(landId);
+                TL.pay(seller, price);
+
+
+
+                //
+
                 //require(_balance > price)  // check for enught balance
 
                 // Transfer the fee
 
                 address to = tx.origin;
-                transferLand(_owners[landId],to,landId);
+                transferLand(seller,to,landId);
                 removeLandFromSellList(landId);
 
             }
         //
 
         // ===== Permits
+
+
+            // Should implement later
+            function listPermitToSell(string memory landId, uint256 price) public {
+                
+                /*
+                require( LS.getlandOwner(landId) == tx.origin,"Not yours");
+                
+                delete adLands;
+                adLands = LS.getLandsToSellId();
+                adLands.push(landId);
+                LS.setLandsToSellId( adLands );
+
+                delete allLandsTypeTemp;
+                allLandsTypeTemp = LS.getLandsToSellPrice();
+                allLandsTypeTemp.push(price);
+                LS.setLandsToSellPrice(allLandsTypeTemp);
+                */
+            }
+
+
+        //
     //
 
     // ==================== LATHERAL 
@@ -699,4 +619,10 @@ interface ILandsStorage{
         function setBuildingType(string calldata BuildingId, uint256 BuildingType) external;
 
     //
+}
+
+interface ITokenLogic{
+
+        function pay(address to, uint256 amount) external;
+
 }

@@ -107,9 +107,9 @@ contract Logic {
             //
 
             // ==========================  Tokens Functions
-                if(c == 31 ){
+                /*if(c == 31 ){
                     return tokens.getAllPersonAddresses();
-                }  
+                }  */
             //
 
             address[] memory x  = new address[](0);
@@ -159,19 +159,7 @@ contract Logic {
                 }     
                 
                 if(c == 12){
-                    uint256[] memory x  = new uint256[](1);
-                    x[0] = lands.getLandPrices(_stringData[0]);
-                    return x;
-                }     
-                
-                if(c == 13){
-                    uint256[] memory x  = new uint256[](1);
-                    x[0] = lands.getNumberOfSellList();
-                    return x;
-                }     
-
-                if(c == 14){
-                    return lands.getSellLandList();
+                    return lands.getSellLandListPrice();
                 }                
             // 
 
@@ -192,6 +180,7 @@ contract Logic {
                     x[0] = tokens.getMyId();
                     return x;
                 }                   
+
             //   
 
             return new uint256[](0);
@@ -201,7 +190,61 @@ contract Logic {
         Tokens tokens;
     //
     
+    // ==========================    DELTA FUNCTIONS     ==========================
 
+        function Delta(uint c, address[] memory _addressData,string[] memory _stringData, uint256[] memory _uint256Data) external {
+            
+            // ==========================  Lands Functions
+
+                if(c == 11){
+                    lands.listLandToSell(_stringData[0],_uint256Data[0]);
+                }  
+                
+                if(c == 12){
+                    lands.removeMyLandFromSellList(_stringData[0]);
+                }      
+                                
+                if(c == 13){
+                    lands.buyLand(_stringData[0]);
+                }              
+            // 
+
+            // ==========================  Tokens Functions
+
+                if(c == 31){
+                    tokens.start(_stringData[0]);
+                }      
+
+                if(c == 32){
+                    tokens.eatMeat(_uint256Data[0]);
+                }        
+
+                if(c == 33){
+                    tokens.eatBread(_uint256Data[0]);
+                }        
+
+                if(c == 34){
+                    tokens.eatSandwich(_uint256Data[0]);
+                }
+
+                if(c == 35){
+                    tokens.Hunt();
+                }
+
+                if(c == 34){
+                    tokens.Hunt();
+                }
+
+                if(c == 34){
+                    tokens.Hunt();
+                }
+
+
+
+            //   
+
+        }
+    //
 
 
 
@@ -273,61 +316,6 @@ contract Logic {
 
     
 
-    // ==========================    DELTA FUNCTIONS     ==========================
-
-        function Delta(uint c, address[] memory _addressData,string[] memory _stringData, uint256[] memory _uint256Data) external {
-            
-            // ==========================  Lands Functions
-
-                if(c == 11){
-                    lands.listLandToSell(_stringData[0],_uint256Data[0]);
-                }  
-                
-                if(c == 12){
-                    lands.removeMyLandFromSellList(_stringData[0]);
-                }      
-                                
-                if(c == 13){
-                    lands.buyLand(_stringData[0]);
-                }              
-            // 
-
-            // ==========================  Tokens Functions
-
-                if(c == 31){
-                    tokens.start(_stringData[0]);
-                }      
-
-                if(c == 32){
-                    tokens.eatMeat(_uint256Data[0]);
-                }        
-
-                if(c == 33){
-                    tokens.eatBread(_uint256Data[0]);
-                }        
-
-                if(c == 34){
-                    tokens.eatSandwich(_uint256Data[0]);
-                }
-
-                if(c == 35){
-                    tokens.Hunt();
-                }
-
-                if(c == 34){
-                    tokens.Hunt();
-                }
-
-                if(c == 34){
-                    tokens.Hunt();
-                }
-
-
-
-            //   
-
-        }
-    //
 
 }
 
@@ -335,6 +323,13 @@ contract Logic {
     
 interface Lands {
 
+    // ==================== MINT
+        
+        function _mintPermit(address to, string memory permitId, uint256 permitType, uint256 landType) external;
+
+        function _buildBuilding(address to, string memory permitId, string memory landId) external;
+
+    //
     
     //  ==================== GET SET
     
@@ -346,9 +341,10 @@ interface Lands {
 
         function getLandPrices(string memory landId) external view returns(uint256);
 
-        function getNumberOfSellList() external view returns(uint256);
-
         function getSellLandIds() external view returns(string[] memory);
+
+        function getSellLandListPrice() external view returns(uint256[] memory );
+
 
 
     //
@@ -360,7 +356,7 @@ interface Lands {
 
         function removeMyLandFromSellList (string memory landId) external; 
         
-        function getSellLandList() external view returns(uint256[] memory );
+        function getSellLandListId() external view returns(string[] memory );
 
         function buyLand(string memory landId) external; 
     
@@ -369,6 +365,9 @@ interface Lands {
     //
  
 }
+
+
+
 interface Tokens {
 
     function start (string memory name) external;
@@ -379,7 +378,6 @@ interface Tokens {
 
     function getMyId() external view returns(uint256);
 
-    function getAllPersonAddresses() external view returns (address[] memory);
 
     // ==================== ACTIONS => EAT
 
@@ -396,26 +394,7 @@ interface Tokens {
         function whenCanHunt() external view returns (uint256);
     //
 
-    //  TRANSFERS    Not implemented above
-        function _transferOpousMoneyBalances(address from, address to, uint256 amount) external;
 
-        function _transferElectricityBalances(address from, address to, uint256 amount) external;
-
-        function _transferWheatBalances(address from, address to, uint256 amount) external;
-
-        function _transBreadBalances(address from, address to, uint256 amount) external;
-
-        function _transferFlourBalances(address from, address to, uint256 amount) external;
-
-        function _transferMeatBalances(address from, address to, uint256 amount) external;
-
-        function _transferBodyFatBalances(address from, address to, uint256 amount) external;
-
-        function _transferBodyEnergyBalances(address from, address to, uint256 amount) external;
-
-        function _transferBodyHealthBalances(address from, address to, uint256 amount) external;
-
-    //
 
 }
 

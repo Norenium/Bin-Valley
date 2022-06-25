@@ -20,6 +20,13 @@ contract Tokens{
         mapping(address =>  string) private _PersonName;
         uint256 PersonIdNumerator = 100;
 
+        // Gets the last time the building's owner used it to generate output
+        mapping(string => uint256) private _HuntingCamp;
+        mapping(string => uint256) private _Farm;
+        mapping(string => uint256) private _Grindr;
+        mapping(string => uint256) private _Bakery;
+        mapping(string => uint256) private _Windmill;
+
     //
 
 
@@ -171,6 +178,48 @@ contract Tokens{
             PersonIdNumerator = value;
         }
 
+        
+        function getLastTimeHC(string calldata buildingId) public view returns(uint256){
+            return _HuntingCamp[buildingId];
+        }
+
+        function setLastTimeHC(string calldata buildingId) public  {
+            _HuntingCamp[buildingId] = block.timestamp;
+        }
+        
+        function getLastTimeFarm(string calldata buildingId) public view returns(uint256){
+            return _Farm[buildingId];
+        }
+
+        function setLastTimeFarm(string calldata buildingId) public  {
+            _Farm[buildingId] = block.timestamp;
+        }
+        
+        function getLastTimeGrindr(string calldata buildingId) public view returns(uint256){
+            return _Grindr[buildingId];
+        }
+
+        function setLastTimeGrindr(string calldata buildingId) public  {
+            _Grindr[buildingId] = block.timestamp;
+        }
+        
+        function getLastTimeBakery(string calldata buildingId) public view returns(uint256){
+            return _Bakery[buildingId];
+        }
+
+        function setLastTimeBakery(string calldata buildingId) public  {
+            _Bakery[buildingId] = block.timestamp;
+        }
+        
+        function getLastTimeWindmill(string calldata buildingId) public view returns(uint256){
+            return _Windmill[buildingId];
+        }
+
+        function setLastTimeWindmill(string calldata buildingId) public  {
+            _Windmill[buildingId] = block.timestamp;
+        }
+        
+
 
     //
 
@@ -239,6 +288,27 @@ interface ITokensStorage{
         function getPersonIdNumerator() external view returns(uint256);
 
         function setPersonIdNumerator(uint256 value) external;
+        
+        function getLastTimeHC(string calldata buildingId) external view returns(uint256);
+
+        function setLastTimeHC(string calldata buildingId) external ;
+        
+        function getLastTimeFarm(string calldata buildingId) external view returns(uint256);
+
+        function setLastTimeFarm(string calldata buildingId) external  ;
+        
+        function getLastTime_Grindr(string calldata buildingId) external view returns(uint256);
+
+        function setLastTime_Grindr(string calldata buildingId) external  ;
+        
+        function getLastTimeBakery(string calldata buildingId) external view returns(uint256);
+
+        function setLastTimeBakery(string calldata buildingId) external ;
+        
+        function getLastTimeWindmill(string calldata buildingId) external view returns(uint256);
+
+        function setLastTimeWindmill(string calldata buildingId) external;
+        
 
     //
 

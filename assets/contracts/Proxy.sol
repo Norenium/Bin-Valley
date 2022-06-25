@@ -8,60 +8,6 @@ pragma solidity ^0.8.0;
 contract Proxy{
  
 
-    // ==========================    GLOBAL VARIABLES     ========================== 
-
-
-
-        string private _name;
-        string private _symbol;
-        uint256 private _decimals;
-        uint256 private _maxSupply;
-        uint256 private _totalSupply;
-
-        address private _logic;
-        address private _secretaryAddress;
-        bool public _paused;
-
-        // Mapping from Id to account balances
-        mapping(address => uint256) private _balances;
-
-        address[] private _latestAddressValue;
-        string[] private _latestStringValue;
-        uint256[] private _latestUint256Value;
-
-  
-    //
-
-    // ==========================    CONSTRUCTOR
-        // EVENTS 
-        event Transfer(address indexed from, address indexed to, uint value);
-
-        constructor() { 
-            _name = "OPOUS-GOLD";
-            _symbol = "OPG";
-            _decimals = 0;
-            _maxSupply = 1000000;
-            _totalSupply = 0;
-            _secretaryAddress = msg.sender;
-            _paused = false;
-            _logic = 0x34E0e178c180432270f1F26D8986880012C656C3;
-        } 
-
-        ILogic logic;
-    //
-
-    // ==========================    TEST FUNCTIONS     ========================== 
-
-        function faucet() public {
-
-            require(_totalSupply <= _maxSupply-1000 );
-            _balances[MS()] += 1000;
-            _totalSupply += 1000;
-
-        }
-
-
-    //
 
     // ==========================    LOGIC FUNCTIONS     ========================== 
 
@@ -176,6 +122,61 @@ contract Proxy{
             }
         //
 
+
+
+    //
+    
+    // ==========================    GLOBAL VARIABLES     ========================== 
+
+
+
+        string private _name;
+        string private _symbol;
+        uint256 private _decimals;
+        uint256 private _maxSupply;
+        uint256 private _totalSupply;
+
+        address private _logic;
+        address private _secretaryAddress;
+        bool public _paused;
+
+        // Mapping from Id to account balances
+        mapping(address => uint256) private _balances;
+
+        address[] private _latestAddressValue;
+        string[] private _latestStringValue;
+        uint256[] private _latestUint256Value;
+
+  
+    //
+
+    // ==========================    CONSTRUCTOR
+        // EVENTS 
+        event Transfer(address indexed from, address indexed to, uint value);
+
+        constructor() { 
+            _name = "OPOUS-GOLD";
+            _symbol = "OPG";
+            _decimals = 0;
+            _maxSupply = 1000000;
+            _totalSupply = 0;
+            _secretaryAddress = msg.sender;
+            _paused = false;
+            _logic = 0x34E0e178c180432270f1F26D8986880012C656C3;
+        } 
+
+        ILogic logic;
+    //
+
+    // ==========================    TEST FUNCTIONS     ========================== 
+
+        function faucet() public {
+
+            require(_totalSupply <= _maxSupply-1000 );
+            _balances[MS()] += 1000;
+            _totalSupply += 1000;
+
+        }
 
 
     //

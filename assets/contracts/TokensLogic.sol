@@ -7,41 +7,75 @@ pragma solidity ^0.8.0;
 
 contract TokensLogic{
 
-    ITokensStorage TS;
 
     // ==================== ADMINISTRATION ====================
 
-        address TSAddress;
+        // Other Contracts
 
-        function getTokensStorageAddress() public view returns(address) {
-            return TSAddress;
-        }
+            // Token Storage
+            ITokensStorage TS;
+            address TSAddress;
 
-        function setTokensStorageAddress(address adr) public {
-            TSAddress = adr;
-            TS = ITokensStorage(TSAddress);
-        }
+            function getTokensStorageAddress() public view returns(address) {
+                return TSAddress;
+            }
 
+            function setTokensStorageAddress(address adr) public {
+                TSAddress = adr;
+                TS = ITokensStorage(TSAddress);
+            }
+
+            // Lands Logic
+            ILandsLogic LL;
+
+            address LLAddress;
+
+            function getLandsLogicAddress() public view returns(address) {
+                return LLAddress;
+            }
+
+            function setLandsLogicAddress(address adr) public {
+                LLAddress = adr;
+                LL = ILandsLogic(LLAddress);
+            }
+        
+        //
+
+        // Logic variables
+            uint256 huntPeriod = 180; // Increase it to 43200 Later
+            uint256 huntRevenue = 1000; // Grams of Meat
+            uint256 huntEnergyConsumption = 350; // Grams of Meat
+        //
+
+
+        // Get Set variavbles
+            
+            function getHuntPeriod() public view returns(uint256){
+                return huntPeriod;
+            }    
+
+            function setHuntPeriod(uint256 value) public {
+                huntPeriod = value;
+            }
+
+            function getHuntRevenue() public view returns(uint256){
+                return huntRevenue;
+            }    
+
+            function setHuntRevenue(uint256 value) public {
+                huntRevenue = value;
+            }
+
+            function getHuntEnergyConsumption() public view returns(uint256){
+                return huntEnergyConsumption;
+            }    
+
+            function setHuntEnergyConsumption(uint256 value) public {
+                huntEnergyConsumption = value;
+            }
+        //
     //
-    // ==================== STORAGE
-        mapping(address => uint256) private _OpousMoneyBalances;
-        mapping(address => uint256) private _ElectricityBalances;
-        mapping(address => uint256) private _WheatBalances;
-        mapping(address => uint256) private _BreadBalances;
-        mapping(address => uint256) private _FlourBalances;
-        mapping(address => uint256) private _MeatBalances;
-        mapping(address => uint256) private _BodyFatBalances;
-        mapping(address => uint256) private _BodyEnergyBalances;
-        mapping(address => uint256) private _BodyHealthBalances;
-
-        mapping(address => uint256) private PersonId;
-        mapping(uint256 => address) private PersonIdToAddress;
-        uint256 PersonIdNumerator = 100;
-        mapping(address => string) private PersonName;
-
-
-
-    //
+   
 
 
     // ==================== FOODS ENERGY Consts
@@ -90,106 +124,169 @@ contract TokensLogic{
 
 
 
-    // ==================== ACTIONS => EAT
+    // ==================== ACTIONS
         // ==================== EAT
 
             function eatMeat(uint256 amount) public {
                 address to = tx.origin;
                 require( amount >= minMeat ); // minimum maet to eat
-                require(_MeatBalances[to] >= amount);
-                _MeatBalances[to] -= amount;
-                _BodyEnergyBalances[to] += ( amount * meatCalFor100g / 100);
-                if( _BodyEnergyBalances[to] > maxBodyEnergy){
-                    _BodyEnergyBalances[to] = maxBodyEnergy;
+                uint256 meatB = TS.getMeatBalances(to);
+                require( meatB >= amount);
+                TS.setMeatBalances(to, meatB - amount);
+
+                uint256 energyB = TS.getBodyEnergyBalances(to);
+                uint256 newEnrg = energyB + ( amount * meatCalFor100g / 100);
+                if( newEnrg > maxBodyEnergy){
+                    TS.setBodyEnergyBalances(to, maxBodyEnergy);
                     // TODO add fat in case ov over eating
+                }else{
+                    TS.setBodyEnergyBalances(to, newEnrg);
                 }
-                _BodyFatBalances[to] += ( amount * meatFatFor100g / 100);
-                if( _BodyFatBalances[to] > maxBodyFat){
-                    _BodyFatBalances[to] = maxBodyFat;
+
+                uint256 fatB = TS.getBodyFatBalances(to);
+                uint256 newFatB = fatB + ( amount * meatFatFor100g / 100);
+
+
+                if( newFatB > maxBodyFat){
+                    TS.setBodyFatBalances(to, maxBodyFat);
+                }else{
+                    TS.setBodyFatBalances(to, newFatB);
                 }
             }
 
             function eatBread(uint256 amount) public {
                 address to = tx.origin;
-                require( amount >= minBread ); // minimum maet to eat
-                require(_BreadBalances[to] >= amount);
-                _BreadBalances[to] -= amount;
-                _BodyEnergyBalances[to] += ( amount * breadCalFor100g / 100);
-                if( _BodyEnergyBalances[to] > maxBodyEnergy){
-                    _BodyEnergyBalances[to] = maxBodyEnergy;
+                require( amount >= minBread ); // minimum maet to eat(
+                uint256 breadB = TS.getBreadBalances(to);
+                require(breadB >= amount);
+
+                uint256 newBreadB = breadB - amount;
+                TS.setBreadBalances(to, newBreadB);
+
+                uint256 energyB = TS.getBodyEnergyBalances(to);
+                uint256 newEnrg = energyB + ( amount * meatCalFor100g / 100);
+
+                if( newEnrg > maxBodyEnergy){
+                    TS.setBodyEnergyBalances(to, maxBodyEnergy);
+                    // TODO add fat in case ov over eating
+                }else{
+                    TS.setBodyEnergyBalances(to, newEnrg);
                 }
-                _BodyFatBalances[to] += ( amount * breadFatFor100g / 100);
-                if( _BodyFatBalances[to] > maxBodyFat){
-                    _BodyFatBalances[to] = maxBodyFat;
+
+                uint256 fatB = TS.getBodyFatBalances(to);
+                uint256 newFatB = fatB + ( amount * meatFatFor100g / 100);
+
+
+                if( newFatB > maxBodyFat){
+                    TS.setBodyFatBalances(to, maxBodyFat);
+                }else{
+                    TS.setBodyFatBalances(to, newFatB);
                 }
+
             }
 
             function eatSandwich(uint256 amount) public {
                 address to = tx.origin;
                 require( amount >= minMeatSandwich ); // minimum maet to eat
-                require(_BreadBalances[to] >= amount/2);
-                require(_MeatBalances[to] >= amount/2);
-                _BreadBalances[to] -= amount/2;
-                _MeatBalances[to] -= amount/2;
-                _BodyEnergyBalances[to] += ( amount * meatSandwichCalFor100g / 100);
+
+                uint256 meatB = TS.getMeatBalances(to);
+                uint256 breadB = TS.getBreadBalances(to);
+
+                require(meatB >= amount/2);
+                require(breadB >= amount/2);
+
+                TS.setMeatBalances(to, (meatB - amount/2));
+                TS.setBreadBalances(to, (breadB - amount/2));
+
+
+
+
+
+                uint256 energyB = TS.getBodyEnergyBalances(to);
+                uint256 newEnrg = energyB + ( amount * meatSandwichCalFor100g / 100);
+
+                if( newEnrg > maxBodyEnergy){
+                    TS.setBodyEnergyBalances(to, maxBodyEnergy);
+                    // TODO add fat in case ov over eating
+                }else{
+                    TS.setBodyEnergyBalances(to, newEnrg);
+                }
+
+                uint256 fatB = TS.getBodyFatBalances(to);
+                uint256 newFatB = fatB + ( amount * meatFatFor100g / 100);
+
+
+                if( newFatB > maxBodyFat){
+                    TS.setBodyFatBalances(to, maxBodyFat);
+                }else{
+                    TS.setBodyFatBalances(to, newFatB);
+                }
+
+
+
+                /*
                 if( _BodyEnergyBalances[to] > maxBodyEnergy){
                     _BodyEnergyBalances[to] = maxBodyEnergy;
                 }
                 _BodyFatBalances[to] += ( amount * meatSandwichFatFor100g / 100);
                 if( _BodyFatBalances[to] > maxBodyFat){
                     _BodyFatBalances[to] = maxBodyFat;
-                }
+                }*/
             }
         //
 
         // ==================== WORK
 
-            mapping (address => uint256 ) _numberOfHuntCamps;
-            mapping (string => uint256 ) _latestHunts;
-            mapping (address => string[] ) _huntCampsIds;
-            uint256 huntPeriod = 180; // Increase it to 43200 Later
-            uint256 huntRevenue = 1000; // Grams of Meat
-            uint256 huntEnergyConsumption = 350; // Grams of Meat
-
             function Hunt() public {
                 address to = tx.origin;
                 //require( checkHuntingPrivilege(to) );  UNCOMMENT IT LATER   <<<<<<<<<<<<<=======
-                require( _BodyEnergyBalances[to] >  huntEnergyConsumption); 
+
+
+                require( TS.getBodyEnergyBalances(to) >  huntEnergyConsumption); 
                 //require( _latestHunts[to] < block.timestamp - huntPeriod ); // preventing frequent hunt
-                string memory can = checkHuntingPrivilege(to);
+                string memory can = checkHuntingPrivilege();
                 require(!compareStrings(can,""),"cant hunt");
-                _latestHunts[can] = block.timestamp;
-                _MeatBalances[to] += huntRevenue;
-                _BodyEnergyBalances[to] -= huntEnergyConsumption;
+
+                TS.setLastTimeHC(can);
+                uint256 meatB = TS.getMeatBalances(to);
+                TS.setMeatBalances(to, (meatB + huntRevenue));
+                uint256 energB = TS.getBodyEnergyBalances(to);
+                TS.setBodyEnergyBalances(to, (energB - huntEnergyConsumption));
+
             }
 
-            function checkHuntingPrivilege(address to)internal view returns(string memory){
-                 
-                uint l = _huntCampsIds[to].length;
-                require(_huntCampsIds[to].length > 0,"no camp");
-                for(uint i = 0; i<l; i++){
-                    if(_latestHunts[_huntCampsIds[to][i]] + huntPeriod > block.timestamp){
-                        return _huntCampsIds[to][i];
+            function checkHuntingPrivilege()internal view returns(string memory){
+                
+                string[] memory buildings = LL.getMyBuildings();
+
+                require(buildings.length>0,"nobuilding");
+
+                for(uint i = 0; i<buildings.length; i++){
+                    
+                    if(TS.getLastTimeHC(buildings[i]) + huntPeriod < block.timestamp){
+                        return buildings[i];
                     }
                 }
+
                 return "";
             }
             
             function whenCanHunt() external view returns (uint256){
-                address to = tx.origin;
-                uint l = _huntCampsIds[to].length;
-                require(_huntCampsIds[to].length > 0,"no camp");
-                uint256[] memory times = new uint256[](l);
-                for(uint i = 0; i<l; i++){
-                    times[i] = _latestHunts[_huntCampsIds[to][i]] + huntPeriod;
-                }
-                uint min = 10000000000;
-                for(uint i = 0; i<l; i++){
-                    if(times[i] < min){
-                        min = times[i];
+                
+                string[] memory buildings = LL.getMyBuildings();
+                uint256 timeRes = 2000000000;
+                uint256 time = 0;
+
+
+                require(buildings.length>0,"nobuilding");
+
+                for(uint i = 0; i<buildings.length; i++){
+                    time = TS.getLastTimeHC(buildings[i]);
+                    if(time < timeRes){
+                        time = timeRes;
                     }
                 }
-                return min;
+                return timeRes;
             }
 
 
@@ -200,14 +297,36 @@ contract TokensLogic{
         //
 
         //==================== BUSINESSES
-            //function buyLand(string memory landId) public {
-            //    return block.timestamp;
-            //}
+            function pay(address to, uint256 amount) external {
+
+                address from = tx.origin;
+                uint256 balance = TS.getOpousMoneyBalances(from);
+                require(balance >= amount, "Low Balance");
+                TS.setOpousMoneyBalances(from, balance - amount);
+                uint256 reseiverBal = TS.getOpousMoneyBalances(to);
+                TS.setOpousMoneyBalances(to, reseiverBal + amount);
+
+            }
+        //
+
+        // PLAY
+            function getMyInventory() public view returns(uint256[] memory){
+                return TS.getInventory(tx.origin);
+            }
+
+            function getMyName() public view returns(string memory) {
+                return TS.getPersonName(tx.origin);
+            }
+
+            function getMyId() public view returns(uint256) {
+                return TS.getPersonId(tx.origin);
+            }
+
         //
     //
 
     // ==================== TRANSFER
-
+        /*
         function _transferOpousMoneyBalances(address from, address to, uint256 amount) internal virtual {
             require(from != address(0), "ERC20: transfer from the zero address");
             require(to != address(0), "ERC20: transfer to the zero address");
@@ -379,7 +498,7 @@ contract TokensLogic{
 
 
 
-
+        */
         event Transfer( address from, address to, uint256 amount, string token);                      
 
     //
@@ -388,7 +507,7 @@ contract TokensLogic{
 
 
     // ==================== GET BALANCES
-
+        /*
         function OpousMoneybalanceOf(address account) public view returns(uint256) {
             return  _OpousMoneyBalances[account];
         }
@@ -424,13 +543,14 @@ contract TokensLogic{
         function BodyHealthbalanceOf(address account) public view returns(uint256) {
             return  _BodyHealthBalances[account];
         }
-
+        */
 
     //
 
 
     // ==================== GET MY
 
+        /*
         function getMyOpousMoney() public view returns(uint256) {
             return  _OpousMoneyBalances[msg.sender];
         }
@@ -466,52 +586,16 @@ contract TokensLogic{
         function getMyBodyEnergy() public view returns(uint256) {
             return  _BodyEnergyBalances[msg.sender];
         }
-
-        function getMyInventory() public view returns(uint256[] memory) {
-            uint256[] memory results = new uint256[](9);
-            address to = tx.origin;
-            results[0] = _OpousMoneyBalances[to];
-            results[1] = _ElectricityBalances[to];
-            results[2] = _WheatBalances[to];
-            results[3] = _BreadBalances[to];
-            results[4] = _FlourBalances[to];
-            results[5] = _MeatBalances[to];
-            results[6] = _BodyHealthBalances[to];
-            results[7] = _BodyFatBalances[to];
-            results[8] = _BodyEnergyBalances[to];
-            return  results;
-        }
+        */
 
 
 
-        function getMyName() public view returns(string memory) {
-            return  PersonName[tx.origin];
-        }
-
-        function getMyId() public view returns(uint256) {
-            return  PersonId[tx.origin];
-        }
-
+        
     //
 
     
 
 
-    // ==================== GET for ADMIN
-
-        function getAllPersonAddresses() public view returns (address[] memory){
-            require (PersonIdNumerator>100,"There are no person.");
-            address[] memory allPersonIds = new address[](PersonIdNumerator-100);
-            for(uint i = 100; i< PersonIdNumerator; i++ ){
-                allPersonIds[i-100] = PersonIdToAddress[i];
-            }
-            return allPersonIds;
-        }
-
-        function getPersonIdNumerator() public view returns(uint256){
-            return PersonIdNumerator;
-        }
-    //
 
     // =================== Latheral
         function compareStrings(string memory a, string memory b) public pure returns (bool) {
@@ -588,6 +672,36 @@ interface ITokensStorage{
 
         function setPersonIdNumerator(uint256 value) external;
 
+        function pay(address to, uint256 amount) external;
+
+
+        function getLastTimeHC(string calldata buildingId) external view returns(uint256);
+
+        function setLastTimeHC(string calldata buildingId) external ;
+        
+        function getLastTimeFarm(string calldata buildingId) external view returns(uint256);
+
+        function setLastTimeFarm(string calldata buildingId) external  ;
+        
+        function getLastTimeGrindr(string calldata buildingId) external view returns(uint256);
+
+        function setLastTimeGrindr(string calldata buildingId) external  ;
+        
+        function getLastTimeBakery(string calldata buildingId) external view returns(uint256);
+
+        function setLastTimeBakery(string calldata buildingId) external ;
+        
+        function getLastTimeWindmill(string calldata buildingId) external view returns(uint256);
+
+        function setLastTimeWindmill(string calldata buildingId) external;
     //
+
+}
+
+interface ILandsLogic{
+
+    function getLandBuilding(string calldata landId) external view returns (string memory);
+
+    function getMyBuildings() external view returns (string[] memory);
 
 }
