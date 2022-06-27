@@ -12,3 +12,12 @@ function CH(){
       document.getElementById("health-bar").ariaValueNow = 50;
       document.getElementById("health-bar").style.width = '50%';
 }
+
+
+function waitingTest(){
+      document.getElementById("main-waiting").style.display = 'block';
+      setTimeout(() => {
+      document.getElementById("main-waiting").style.display = 'none';
+            
+      }, 3000);
+}

@@ -6,6 +6,46 @@ font-family: 'Roboto', sans-serif;              //its very formal and serius
 font-family: 'Tourney', cursive;                //its Outlined
 */
 
+.Forest{
+      color: rgb(144, 241, 125);
+      background-color: rgba(27, 231, 20, 0.486);
+}
+
+.Agricultural{
+      color: rgb(179, 73, 11);
+      background-color: rgba(240, 222, 118, 0.801);
+}
+
+.Urban{
+      color: rgb(170, 191, 247);
+      background-color: rgba(48, 35, 121, 0.801);
+}
+
+
+.my-land-row{
+      border: #505 2px solid;
+      margin-bottom: 10px;
+      font-size: 1rem;
+}
+
+.waiting{
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 10;
+      background-color: rgba(255, 221, 170, 0.4);
+      display: none;
+      padding-top: 30%;
+      font-size: xx-large;
+}
+
+.color-fda{
+      color: #FDA;
+
+}
+
 .land-for-sale{
       margin: 5px;
       padding:  10px !important;

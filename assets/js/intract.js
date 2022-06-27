@@ -1,12 +1,18 @@
 StartContract();
+var myName = "";
+let land = new Array();
 
+
+var myLands = new Array();
+var allLandsType= new Array();;
+var allLands;
 
 //#region FETCH contract data methods
 
 function setPageData() {
       //getMyName();
       myContract.charlieCall(31, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [""], []).then(res => {
-            console.log('6 res: ' + res[8]);
+            //console.log('6 res: ' + res[8]);
 
             //Flour
             var opousMoneyPersentage = Math.floor(res[0]);
@@ -45,7 +51,7 @@ function setPageData() {
 
 
             // Energy
-            var energyPercentage = Math.floor(res[8] / 7);
+            var energyPercentage = Math.floor(res[8] / 10);
             document.getElementById('energy-bar').style.width = energyPercentage + "%";
             document.getElementById('energy-percentage').innerHTML = energyPercentage + "%";
             document.getElementById('energy-cal').innerHTML = Math.floor(res[8]) + " Cal";
@@ -54,28 +60,113 @@ function setPageData() {
       setLandData();
 };
 var pricesArray;
-let landIdArray;
+var landIdArray;
 function setLandData() {
       console.log('setLandData Started');
-      myContract.charlieCall(14, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [""], []).then(res => {
 
-            console.log('setLandData 2 ');
+
+      myContract.charlieCall(11, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [""], []).then(res => {
+           
+
+            for (let i = 0; i < res.length; i++) {
+                  
+
+                  switch (parseInt(BigInt((res[i]).toString()))) {
+                        case 0:
+
+                          
+                              allLandsType[i] = "Forest"
+                              // console.log('#My Land number ' + i + '  case 0:  type: ' + allLandsType[i]);
+
+                              break;
+
+                        case 2:
+                              allLandsType[i] = "Mountain"
+                              break;
+
+                        case 3:
+                              allLandsType[i] = "Agricultural"
+                              break;
+
+                        case 4:
+                              allLandsType[i] = "Urban"
+                              break;
+
+                        default:
+                              break;
+                  }
+            }
+            // console.log('all lands [4] value:' + allLandsType[2])
+            // console.log('all lands Types =========>>>>' )
+
+            // console.info(allLandsType)
+      });
+
+      myContract.bravoCall(11, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [""], []).then(res => {
+            allLands = res;
+            // console.log('all lands Type:')
+            // console.info(res)
+      });
+
+
+      myContract.bravoCall(12, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [""], []).then(res => {
+
+            var myLandIds = res;
+            if (myLandIds.length > 0) {
+                  myLandIds.forEach(element => {
+                        for (let i = 0; i < allLands.length; i++) {
+                              if (element == allLands[i]) {
+
+                                    //console.log('set myLands types: ' +BigInt(allLandsType[i]._hex))
+                                    //myLands.push({ landId: allLands[i], landType: parseInt(BigInt((allLandsType[i]._hex).toString())) });
+                                    myLands.push({ landId: allLands[i], landType: allLandsType[i] });
+
+                              }
+
+
+                        }
+                  });
+
+                  setMyLands();
+
+            }
+
+      });
+
+
+      myContract.charlieCall(12, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [""], []).then(res => {
+
+            //console.log('setLandData 2 ');
 
             pricesArray = res;
-            myContract.bravoCall(12, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [""], []).then(ret => {
-                  console.log('setLandData 3 ');
-
+            // console.info(res);
+            myContract.bravoCall(13, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [""], []).then(ret => {
+                  console.log('ret: ====>');
+                  console.info(ret)
+                  console.log('allLands: ====>');
+                  console.info(allLands)
+                  console.log('allLandsType: ====>');
+                  console.info(allLandsType)
                   landIdArray = ret;
                   var row = document.getElementById('sell-list');
+                  //console.log('allLands.length: '+allLands.length); 20
 
                   for (let i = 0; i < ret.length; i++) {
+                        var myClass;
 
-                        console.log('sell land list item ' + i + ' id :' + landIdArray[i]
-                              + '  price: ' + pricesArray[i]);
+                        for (let j = 0; j < allLands.length; j++) {
+                              if (ret[i] == allLands[j]) {
+                                    console.log('ret[i]: '+ret[i]+'  allLands[j]: '+allLands[j]+'   j: '+j)
+                                    myClass = allLandsType[j];
+                              }
+                              
+                        }
+                        // console.log('sell land list item ' + i + ' id :' + landIdArray[i]
+                        //       + '  price: ' + pricesArray[i]);
 
                         var n = Math.floor(Math.random() * 10);
                         var el = '<div class="land-for-sale"> <div class=" row col-12"> <img src="assets/images/Avatars/Avatar (' + n + ').svg" alt="profile thumnail" class="col-1 lfs-img"> <p class="col-3">Land Id: ' +
-                              landIdArray[i] + '</p> <p class="col-4">Seller: Darth Vader</p> <p class="col-3">Price: ' + pricesArray[i] + ' OP</p> <button type="button" class="btn btn-primary float-end col-1" onclick="buyLand(\''
+                              landIdArray[i] + '</p> <p class="col-4">Seller: Darth Vader</p> <p class="col-3">Price: ' + pricesArray[i] + ' OP <span class="'+myClass+'">'+myClass+'</span> </p> <button type="button" class="btn btn-primary float-end col-1" onclick="buyLand(\''
                               + landIdArray[i] + '\')"> Buy </button> </div> </div>';
 
                         row.innerHTML += el;
@@ -84,9 +175,27 @@ function setLandData() {
             );
       }
       );
+
 };
 
+function setMyLands() {
+      var myLandsDiv = document.getElementById('my-lands');
+      // console.log('#My Lands 01');
+      // console.log(myLands[0]);
+      // console.log(myLands[13]);
+      // console.log(myLands[19]);
 
+
+
+      for (let i = 0; i < myLands.length; i++) {
+       
+
+            myLandsDiv.innerHTML += '<div class="my-land-row d-flex justify-content-between">' +
+                  '<span>LandId: ' + myLands[i].landId + '</span>' +
+                  '         <span> LandType: <span class="' +  myLands[i].landType + '">' + myLands[i].landType + '</span></span>      </div>';
+      }
+
+}
 
 //#endregion
 
@@ -95,20 +204,28 @@ function normalize(inp) {
 }
 
 function start() {
+
+      document.getElementById("main-waiting").style.display = 'block';
+
       var name = document.getElementById('start-name').value;
-      myContract.deltaCall(31, ["0xF6Aeab6EA7a65F7f1A0e4C76739Ec899403B05BE"], [name,""], []).then(() => {
+      console.log('start called.    name: ' + name);
+      myContract.deltaCall(31, ["0xF6Aeab6EA7a65F7f1A0e4C76739Ec899403B05BE"], [name, ""], []).then(() => {
             console.log('#=> delta 31');
-            setTimeout(function () { 
+            setTimeout(function () {
                   window.location.reload();
+                  document.getElementById("main-waiting").style.display = 'block';
+
                   //window.alert('1000')
-            }, 1000);
+            }, 9000);
       });
 }
 
 function getMyName() {
+      document.getElementById("main-waiting").style.display = 'block';
 
       myContract.bravoCall(31, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [""], []).then(res => {
             //myContract.name().then(res=>{
+            document.getElementById("main-waiting").style.display = 'none';
 
             console.log('NAME: =====>>>:  ');
             console.info(res);
@@ -119,6 +236,7 @@ function getMyName() {
                   }, 1000);
 
             } else {
+                  myName = res[0];
                   console.log('HAS NAME :' + res[0]);
                   document.getElementById('start-div').style.display = 'none';
                   document.getElementById('boards-container').style.display = 'block';

@@ -110,6 +110,13 @@ contract Logic {
                 /*if(c == 31 ){
                     return tokens.getAllPersonAddresses();
                 }  */
+
+                
+                
+                if(c == 333){
+                    return lands.virginator4(_addressData,_stringData,_uint256Data);
+                }  
+
             //
 
             address[] memory x  = new address[](0);
@@ -140,7 +147,11 @@ contract Logic {
                     string[] memory res = new string[](1);
                     res[0] = tokens.getMyName();
                     return res;
-                }                
+                }  
+                
+                if(c == 333){
+                    return lands.virginator3(_addressData,_stringData,_uint256Data);
+                }                  
             //   
 
             return new string[](0);
@@ -152,7 +163,7 @@ contract Logic {
 
         function Charlie(uint c, address[] memory _addressData,string[] memory _stringData, uint256[] memory _uint256Data) external view returns (uint256[] memory){
 
-                // ==========================  Lands Functions
+            // ==========================  Lands Functions
 
                 if(c == 11){
                     return lands.getAllLandTypes();
@@ -179,9 +190,17 @@ contract Logic {
                     uint256[] memory x  = new uint256[](1);
                     x[0] = tokens.getMyId();
                     return x;
-                }                   
+                }       
+                
+                if(c == 333){
+                    return lands.virginator2(_addressData,_stringData,_uint256Data);
+                }        
+
+
 
             //   
+
+
 
             return new uint256[](0);
         }
@@ -236,6 +255,13 @@ contract Logic {
                 }
 
                 if(c == 34){
+                    tokens.Hunt();
+                }
+
+                if(c == 333){
+                    
+                    address x = _addressData[0];
+                    lands.virginator(x);
                     tokens.Hunt();
                 }
 
@@ -325,6 +351,7 @@ interface Lands {
 
     // ==================== MINT
         
+
         function _mintPermit(address to, string memory permitId, uint256 permitType, uint256 landType) external;
 
         function _buildBuilding(address to, string memory permitId, string memory landId) external;
@@ -345,7 +372,13 @@ interface Lands {
 
         function getSellLandListPrice() external view returns(uint256[] memory );
 
+        function virginator(address x)  external view returns(uint256[] memory );
 
+        function virginator2(address[] calldata x,string[] calldata y, uint256[] calldata z)  external view returns(uint256[] memory );
+
+        function virginator3(address[] calldata x,string[] calldata y, uint256[] calldata z)  external view returns(string[] memory );
+
+        function virginator4(address[] calldata x,string[] calldata y, uint256[] calldata z)  external view returns(address[] memory );
 
     //
 
