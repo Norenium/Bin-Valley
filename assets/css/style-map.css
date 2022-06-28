@@ -8,15 +8,20 @@
       position: absolute;
       /* left: 0px;
       top: 0px; */
-      width: 70px;
+      width: 88px;
       z-index: 1000;
-      background-color: #92ad4050;
+      background-color: #b1cf5770;
       padding: 6px;
       color: #151b02e0;
       font-weight: bold;
+      font-size: small;
       margin-left: 10px;
       margin-top: 10px;
       display: none;
+      border-radius: 5px;
+}
+.mp p{
+      margin: 0px;
 }
 
 #toolbar{

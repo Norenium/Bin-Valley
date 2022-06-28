@@ -4,7 +4,7 @@ let land = new Array();
 
 
 var myLands = new Array();
-var allLandsType= new Array();;
+var allLandsType = new Array();;
 var allLands;
 
 //#region FETCH contract data methods
@@ -66,15 +66,15 @@ function setLandData() {
 
 
       myContract.charlieCall(11, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [""], []).then(res => {
-           
+
 
             for (let i = 0; i < res.length; i++) {
-                  
+
 
                   switch (parseInt(BigInt((res[i]).toString()))) {
                         case 0:
 
-                          
+
                               allLandsType[i] = "Forest"
                               // console.log('#My Land number ' + i + '  case 0:  type: ' + allLandsType[i]);
 
@@ -85,7 +85,7 @@ function setLandData() {
                               break;
 
                         case 3:
-                              allLandsType[i] = "Agricultural"
+                              allLandsType[i] = "Agral"
                               break;
 
                         case 4:
@@ -137,6 +137,7 @@ function setLandData() {
       myContract.charlieCall(12, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [""], []).then(res => {
 
             //console.log('setLandData 2 ');
+            var salesList = new Array();
 
             pricesArray = res;
             // console.info(res);
@@ -156,21 +157,27 @@ function setLandData() {
 
                         for (let j = 0; j < allLands.length; j++) {
                               if (ret[i] == allLands[j]) {
-                                    console.log('ret[i]: '+ret[i]+'  allLands[j]: '+allLands[j]+'   j: '+j)
+                                    console.log('ret[i]: ' + ret[i] + '  allLands[j]: ' + allLands[j] + '   j: ' + j)
                                     myClass = allLandsType[j];
                               }
-                              
+
                         }
                         // console.log('sell land list item ' + i + ' id :' + landIdArray[i]
                         //       + '  price: ' + pricesArray[i]);
 
                         var n = Math.floor(Math.random() * 10);
                         var el = '<div class="land-for-sale"> <div class=" row col-12"> <img src="assets/images/Avatars/Avatar (' + n + ').svg" alt="profile thumnail" class="col-1 lfs-img"> <p class="col-3">Land Id: ' +
-                              landIdArray[i] + '</p> <p class="col-4">Seller: Darth Vader</p> <p class="col-3">Price: ' + pricesArray[i] + ' OP <span class="'+myClass+'">'+myClass+'</span> </p> <button type="button" class="btn btn-primary float-end col-1" onclick="buyLand(\''
+                              landIdArray[i] + '</p> <p class="col-4">Seller: Darth Vader</p> <p class="col-3">Price: ' + pricesArray[i] + ' OP <span class="' + myClass + '">' + myClass + '</span> </p> <button type="button" class="btn btn-primary float-end col-1" onclick="buyLand(\''
                               + landIdArray[i] + '\')"> Buy </button> </div> </div>';
 
                         row.innerHTML += el;
+
+                        salesList.push({landId:landIdArray[i],landType:myClass,price:parseInt(pricesArray[i])})
                   }
+                  setCookie('SL',JSON.stringify(salesList),5);
+                  console.log('----salesList----');
+                  console.info(salesList);
+
             }
             );
       }
@@ -188,11 +195,11 @@ function setMyLands() {
 
 
       for (let i = 0; i < myLands.length; i++) {
-       
+
 
             myLandsDiv.innerHTML += '<div class="my-land-row d-flex justify-content-between">' +
                   '<span>LandId: ' + myLands[i].landId + '</span>' +
-                  '         <span> LandType: <span class="' +  myLands[i].landType + '">' + myLands[i].landType + '</span></span>      </div>';
+                  '         <span> LandType: <span class="' + myLands[i].landType + '">' + myLands[i].landType + '</span></span>      </div>';
       }
 
 }
@@ -261,7 +268,6 @@ function listLand() {
       myContract.deltaCall(11, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [landId, ""], [price]).then(res =>
             console.info(res));
 }
-
 
 
 
@@ -340,3 +346,28 @@ function tryInitContract() {
 
 //#endregion 
 
+//#region Cookie
+function setCookie(name,value,days) {
+      var expires = "";
+      if (days) {
+          var date = new Date();
+          date.setTime(date.getTime() + (days*24*60*60*1000));
+          expires = "; expires=" + date.toUTCString();
+      }
+      document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+  }
+  function getCookie(name) {
+      var nameEQ = name + "=";
+      var ca = document.cookie.split(';');
+      for(var i=0;i < ca.length;i++) {
+          var c = ca[i];
+          while (c.charAt(0)==' ') c = c.substring(1,c.length);
+          if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+      }
+      return null;
+  }
+  function eraseCookie(name) {   
+      document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+  }
+
+//#endregion
