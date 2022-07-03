@@ -40,13 +40,20 @@ function showSales() {
                         saleIds.push(all[i].id);
                         saleIdsText.push(all[i].innerHTML);
                         document.getElementById(all[i].id).style.display = "block";
-                        all[i].innerHTML += '<p>Price: ' + salesList[j].price + ' OP <br> Type: ' + salesList[j].landType + '</p>';
+                        all[i].innerHTML += '<p>Price: ' + salesList[j].price + ' OP <button class="tool-btn btn-small"  id="buyLand-' + salesList[j].landId.toString() + '">Buy</button> Type: ' + salesList[j].landType + '</p>';
+                        document.getElementById('buyLand-' + salesList[j].landId.toString()).addEventListener('click', function(){
+                              buyLand(salesList[j].landId.toString());
+                        });
                   }
 
             }
       }
 }
-
+function buyLand(landId) {
+      //window.alert('call for buy: ' + landId);
+      setCookie   ('buyLand',landId, 0.01);
+      window.location.href='./index.html';
+}
 function hideSales() {
       for (let j = 0; j < saleIds.length; j++) {
             var el = document.getElementById(saleIds[j]);

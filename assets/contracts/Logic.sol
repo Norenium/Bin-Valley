@@ -59,7 +59,11 @@ contract Logic {
             }
 
 
-            function initializer() external { 
+            function initializer(address LandAgent, address TokenAgent) external { 
+                _landsAddress = LandAgent;
+                lands = Lands( _landsAddress);
+                _tokensAddress = TokenAgent;
+                tokens = Tokens( _tokensAddress);
                 _secretaryAddress = TrO();
                 isInitialized = true;
             }
@@ -135,18 +139,48 @@ contract Logic {
                 if(c == 11){
                     return lands.getAllLands();
                 }  
-                
+
                 if(c == 12){
-                    return lands.getSellLandIds();
-                }                
+                    return lands.getMyLands();
+                }  
+                
+                if(c == 13){
+                    return lands.getSellLandListId();
+                }   
+                
+                if(c == 14){
+                    string[] memory ret = new string[](1);
+                    ret[0] = lands.getLandBuilding(_stringData[0]);
+                    return ret;
+                }   
+                
+                if(c == 15){
+                    return lands.getMyPermits();
+                }    
+                
+                if(c == 16){
+                    return lands.getMyBuildings();
+                }     
+                
+                if(c == 17){
+                    return lands.getAllBuildings();
+                }            
+
+                // TO DO: add getMyPermits and getMyLands    
             // 
 
-            // ==========================  Tokens Functions
+            // ==========================  Tokens Functions getMeatSellList
 
                 if(c == 31){
                     string[] memory res = new string[](1);
                     res[0] = tokens.getMyName();
                     return res;
+                }  
+
+                if(c == 32){
+
+                    return tokens.getMeatSellList();
+
                 }  
                 
                 if(c == 333){
@@ -166,7 +200,7 @@ contract Logic {
             // ==========================  Lands Functions
 
                 if(c == 11){
-                    return lands.getAllLandTypes();
+                    return lands.getAllLandsTypes();
                 }     
                 
                 if(c == 12){
@@ -224,7 +258,19 @@ contract Logic {
                 }      
                                 
                 if(c == 13){
-                    lands.buyLand(_stringData[0]);
+                    lands.buyLand(_stringData[0],_uint256Data[0]);
+                }  
+                                
+                if(c == 14){
+                    address to = tx.origin;
+                    uint256 ti = _uint256Data[0];
+                    require(ti < 6 , "type is not valid");
+                    lands._mintPermit(to,ti,_uint256Data[1]);
+                }    
+                                
+                if(c == 15){
+                    address to = tx.origin;
+                    lands._buildBuilding(to,_stringData[0],_stringData[1]);
                 }              
             // 
 
@@ -250,12 +296,16 @@ contract Logic {
                     tokens.Hunt();
                 }
 
-                if(c == 34){
-                    tokens.Hunt();
+                if(c == 36){
+                    tokens.listMeatToSell(_uint256Data[0], _uint256Data[1]);
                 }
 
-                if(c == 34){
-                    tokens.Hunt();
+                if(c == 37){
+                    tokens.cancelMeatToSell(_uint256Data[0]);
+                }
+
+                if(c == 38){
+                    tokens.buyMeat(_uint256Data[0]);
                 }
 
                 if(c == 333){
@@ -276,6 +326,33 @@ contract Logic {
 
     // ==========================    LATERAL FUNCTIONS     ==========================
     
+
+
+        /// convert uint to string 
+        function uint2str(uint _i) internal pure returns (string memory _uintAsString) {
+            if (_i == 0) {
+                return "0";
+            }
+            uint j = _i;
+            uint len;
+            while (j != 0) {
+                len++;
+                j /= 10;
+            }
+            bytes memory bstr = new bytes(len);
+            uint k = len;
+            while (_i != 0) {
+                k = k-1;
+                uint8 temp = (48 + uint8(_i - _i / 10 * 10));
+                bytes1 b1 = bytes1(temp);
+                bstr[k] = b1;
+                _i /= 10;
+            }
+            return string(bstr);
+        }
+
+
+
         /// Converting string to Uint256 Code example:
         function stringToUint(string memory s) internal pure returns (uint256, bool) {
             bool hasError = false;
@@ -352,7 +429,7 @@ interface Lands {
     // ==================== MINT
         
 
-        function _mintPermit(address to, string memory permitId, uint256 permitType, uint256 landType) external;
+        function _mintPermit(address to, uint256 permitType, uint256 landType) external;
 
         function _buildBuilding(address to, string memory permitId, string memory landId) external;
 
@@ -362,7 +439,9 @@ interface Lands {
     
         function getAllLands() external view returns(string[] memory);
 
-        function getAllLandTypes() external view returns(uint256[] memory);
+        function getAllLandsTypes() external view returns(uint256[] memory);
+
+        function getMyLands() external view returns (string[] memory);
         
         function getLandOwner(string memory landId) external view returns(address); 
 
@@ -371,6 +450,14 @@ interface Lands {
         function getSellLandIds() external view returns(string[] memory);
 
         function getSellLandListPrice() external view returns(uint256[] memory );
+
+        function getLandBuilding(string calldata landId) external view returns (string memory);
+
+        function getMyPermits() external view returns (string[] memory);
+
+        function getMyBuildings() external view returns (string[] memory);
+
+        function getAllBuildings() external view returns (string[] memory);
 
         function virginator(address x)  external view returns(uint256[] memory );
 
@@ -390,8 +477,9 @@ interface Lands {
         function removeMyLandFromSellList (string memory landId) external; 
         
         function getSellLandListId() external view returns(string[] memory );
+        //       getSellLandListId
 
-        function buyLand(string memory landId) external; 
+        function buyLand(string memory landId, uint256 buyPrice) external; 
     
 
 
@@ -425,6 +513,15 @@ interface Tokens {
         function Hunt() external;
 
         function whenCanHunt() external view returns (uint256);
+
+        
+        function listMeatToSell(uint256 amount, uint256 price) external ;
+
+        function cancelMeatToSell(uint256 ticketId) external ;
+
+        function buyMeat(uint256 ticketId) external;
+
+        function getMeatSellList() external view returns (string[] memory);
     //
 
 

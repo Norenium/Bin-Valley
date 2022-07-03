@@ -3,9 +3,9 @@ pragma solidity ^0.8.0;
 
     // TODO:
     // add get set for food consts
-    //
+    // add transfer opous money limmitations included.
 
-contract TokensLogic{
+contract TokenAgent{
 
 
     // ==================== ADMINISTRATION ====================
@@ -15,6 +15,10 @@ contract TokensLogic{
             // Token Storage
             ITokensStorage TS;
             address TSAddress;
+
+            constructor(){
+                TS = ITokensStorage(0xEAc293617c30ECcC5eA3e49f78910eeb4C8e83Ba);
+            }
 
             function getTokensStorageAddress() public view returns(address) {
                 return TSAddress;
@@ -26,17 +30,24 @@ contract TokensLogic{
             }
 
             // Lands Logic
-            ILandsLogic LL;
+            ILandsAgent LA;
 
-            address LLAddress;
+            address LAAddress;
 
-            function getLandsLogicAddress() public view returns(address) {
-                return LLAddress;
+            function getLandsAgentAddress() public view returns(address) {
+                return LAAddress;
             }
 
-            function setLandsLogicAddress(address adr) public {
-                LLAddress = adr;
-                LL = ILandsLogic(LLAddress);
+            function setLandsAgentAddress(address adr) public {
+                LAAddress = adr;
+                LA = ILandsAgent(LAAddress);
+            }
+
+            function setBothAddresses (address TokenStorageAdr, address LandAgentAde) public {
+                TSAddress = TokenStorageAdr;
+                TS = ITokensStorage(TSAddress);
+                LAAddress = LandAgentAde;
+                LA = ILandsAgent(LAAddress);
             }
         
         //
@@ -96,22 +107,22 @@ contract TokensLogic{
         // Maximum to have
         uint256 maxBodyHealth = 100;
         uint256 maxBodyFat = 5000;
-        uint256 maxBodyEnergy = 700;
+        uint256 maxBodyEnergy = 1000;
     //
 
     function start (string memory name) public {
         address to = tx.origin;
-        require(TS.getPersonId(to)==0,"adress is a person");
-        uint256[] memory inp  = new uint256[](9);
-        inp[0] = 0;
+        require(TS.getPersonId(to) == 0 ,"adress is a person");
+        uint256[] memory inp  = new uint256[](10);
+        inp[0] = 1000;
         inp[1] = 0;
         inp[2] = 0;
         inp[3] = 0;
         inp[4] = 0;
         inp[5] = 0;
-        inp[6] = 1000;
+        inp[6] = 100;
         inp[7] = 700;
-        inp[8] = 100;
+        inp[8] = 1000;
         inp[9] = block.timestamp;
         TS.setInventory(to, inp);
 
@@ -257,7 +268,7 @@ contract TokensLogic{
 
             function checkHuntingPrivilege()internal view returns(string memory){
                 
-                string[] memory buildings = LL.getMyBuildings();
+                string[] memory buildings = LA.getMyBuildings();
 
                 require(buildings.length>0,"nobuilding");
 
@@ -273,7 +284,7 @@ contract TokensLogic{
             
             function whenCanHunt() external view returns (uint256){
                 
-                string[] memory buildings = LL.getMyBuildings();
+                string[] memory buildings = LA.getMyBuildings();
                 uint256 timeRes = 2000000000;
                 uint256 time = 0;
 
@@ -320,6 +331,41 @@ contract TokensLogic{
 
             function getMyId() public view returns(uint256) {
                 return TS.getPersonId(tx.origin);
+            }
+
+        //
+
+        // ==================== Sell Offer
+
+            function listMeatToSell(uint256 amount, uint256 price) public {                
+                TS.addSellMeat(amount,price);
+            }
+
+            function cancelMeatToSell(uint256 ticketId) public {                
+                address to = tx.origin;
+                uint256[] memory ticket = TS.getSellMeat(ticketId);
+                address seller = TS.getPersonIdToAddress(ticket[1]);
+                require(to == seller,"not yours");
+                uint256 meatBal = TS.getMeatBalances(to);
+                TS.setMeatBalances(to, meatBal+ticket[2]);
+                TS.removeSellMeat(ticketId);
+            }
+
+            function buyMeat(uint256 ticketId) public {
+
+                address to = tx.origin;
+                uint256[] memory ticket = TS.getSellMeat(ticketId);
+                address seller = TS.getPersonIdToAddress(ticket[1]);
+
+                TS.pay(seller, ticket[3]);
+                uint256 meatBal = TS.getMeatBalances(to);
+                TS.setMeatBalances(to, meatBal+ticket[2]);
+                TS.removeSellMeat(ticketId);
+
+            }
+
+            function getMeatSellList() public view returns (string[] memory){
+                return TS.getAllSellMeat();
             }
 
         //
@@ -694,11 +740,20 @@ interface ITokensStorage{
         function getLastTimeWindmill(string calldata buildingId) external view returns(uint256);
 
         function setLastTimeWindmill(string calldata buildingId) external;
+
+        function addSellMeat( uint256 amount, uint256 price) external;
+
+        function removeSellMeat( uint256 sellTicketId) external;
+
+        function getSellMeat(uint256 ticketId) external view returns(uint256[] memory);
+
+        function getAllSellMeat() external view returns(string[] memory);
+
     //
 
 }
 
-interface ILandsLogic{
+interface ILandsAgent{
 
     function getLandBuilding(string calldata landId) external view returns (string memory);
 

@@ -5,7 +5,20 @@ font-family: 'Jura', sans-serif;                //its slim
 font-family: 'Roboto', sans-serif;              //its very formal and serius
 font-family: 'Tourney', cursive;                //its Outlined
 */
-
+a{
+ cursor: pointer;
+}
+.pointer:hover{
+ cursor: pointer;
+}
+.inp-color{
+      background-color: #8b4671 !important;
+      color: #FDA !important
+}
+textarea {
+      resize: none;
+      width: 100%;
+   }
 .Forest{
       color: rgb(144, 241, 125);
       background-color: rgba(27, 231, 20, 0.486);

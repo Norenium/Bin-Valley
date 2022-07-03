@@ -1,0 +1,95 @@
+<!doctype html>
+<html class="no-js" lang="en" dir="ltr">
+
+<head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <title>Bin Valley</title>
+
+      <!-- project css file  -->
+      <link rel="stylesheet" href="assets/css/style.css">
+
+
+
+      <!--#region favicon -->
+      <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicon/apple-touch-icon.png">
+      <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon/favicon-32x32.png">
+      <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon/favicon-16x16.png">
+      <link rel="manifest" href="assets/images/favicon/site.webmanifest">
+      <!-- #endregion    -->
+
+      <!-- #region  BOOTSTRAP  -->
+      <!-- <link rel="stylesheet" href="assets/node_modules/bootstrap/dist/css/bootstrap.min.css"> -->
+      <link rel="stylesheet" href="assets/node_modules/bootstrap/dist/css/bootstrap.css">
+      <!-- <link rel="stylesheet" href="assets/node_modules/bootstrap/dist/js/bootstrap.js"> -->
+
+      <!-- #endregion    -->
+
+
+      <!--#region Meta tags -->
+      <meta property="og:image"
+            content="https://norenium.github.io/Bin-Valley/assets/images/favicon/apple-touch-icon.png">
+      <meta property="og:description" content="The cutest GameFi platform ever.">
+      <meta property="og:url" content="https://norenium.github.io/Bin-Valley/">
+      <meta property="og:title" content="Bin Valley">
+      <!-- #endregion    -->
+
+
+      <!-- #region Google Fonts  -->
+      <link href="https://fonts.googleapis.com/css2?family=Changa:wght@300&family=Jura:wght@300;400;500;700&family=Roboto:wght@100;300;400;500;700;900&family=Tourney:wght@200&display=swap"
+            rel="stylesheet">
+
+      <!-- #endregion    -->
+
+
+</head>
+
+<body>
+
+
+
+      <div class="body-box">
+            <h1>Market board</h1>
+            <p>Lands and goods market here:</p>
+            <hr id="land-market-top">
+
+            <div class="control-unit">
+                  <p>Land for sale:</p>
+                  <hr>
+                  <div id="sell-list"></div>
+            </div>
+            <br>
+            <div class="control-unit">
+                  <p>List a land to sale:</p>
+                  <hr>
+                  <div>
+                        <div class="land-for-sale col-12 row">
+
+
+                              <div class="col-8 row ">
+                                    <div class="input-group input-group-sm mb-3">
+                                          <span class="input-group-text inp-color" id="inputGroup-sizing-sm">Enter Land Id: </span>
+                                          <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-xs">
+                                        </div>
+                                        <div class="input-group input-group-sm mb-3">
+                                          <span class="input-group-text inp-color" id="inputGroup-sizing-sm">Enter Price: &nbsp;&nbsp;&nbsp; </span>
+                                          <input type="number" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                                        </div>
+
+
+                              </div>
+
+                              <div class="col-4">
+                                    <button type="button" class="btn btn-primary float-end "
+                                          onclick="listLand()">List</button>
+                                    </button>
+                              </div>
+
+                        </div>
+                  </div>
+            </div>
+      </div>
+</body>
+
+</html>

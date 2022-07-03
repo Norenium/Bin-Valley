@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 //  1- add modifiers to avoide any chanes except for the lands logic
 //  
 
-contract Lands{
+contract LandsStorage{
     
     // TYPES CODE CONVENTION 
         /*
@@ -43,8 +43,11 @@ contract Lands{
     //
 
 
-
-
+    // ==================== LATHERAL ====================
+        function compareStrings(string memory a, string memory b) public pure returns (bool) {
+            return (keccak256(abi.encodePacked((a))) == keccak256(abi.encodePacked((b))));
+        }
+    //
 
     // ==================== STORAGE ====================
 
@@ -78,13 +81,16 @@ contract Lands{
             uint256[] allLandsTypes;
 
             // number of all minted lands
-            uint256 numberOfAllLands;
+            uint256 numberOfAllLands=0;
 
             // landIds listed to sell
             string[] landsToSellId;
 
             // prices for the lands which are listed to sell. in the same order of the landsToSellId
             uint256[] landsToSellPrice;
+
+            // number of all lands listed to aell
+            uint256 numberOfAllSellLandsList=0;
         //
 
         // ================ Permits
@@ -95,18 +101,18 @@ contract Lands{
 
             // Mapping from permitId to owner address
             mapping(string => address) private _permitsOwners;
+            
+            // Mapping permitId to permitType
+            mapping(string => uint256) private _permitType;
+
+            // Mapping permitId to landType - Defines the permit is allows to build the builing in what land type
+            mapping(string => uint256) private _permitsLandType;
                         
             // Mapping from permitId to its use state
             mapping(string => bool) private _permitUsed;
 
             // Mapping owner address to number of permits
             mapping(address => uint256) private _numberOfPermits;
-
-            // Mapping permitId to permitType
-            mapping(string => uint256) private _permitType;
-
-            // Mapping permitId to landType - Defines the permit is allows to build the builing in what land type
-            mapping(string => uint256) private _permitsLandType;
 
             // Mapping owner address to its all permits by permitId
             mapping(address => string[]) private _addressPermits;
@@ -162,9 +168,14 @@ contract Lands{
     //
 
 
-    // ==================== METHODS ====================
-
+    // ==================== METHODS Get Add Remove ====================
+        /*
+        function addStringToArray(string memory input, string[] storage ref[] origin ) internal {
+            string memory tempOrigin = new string[](origin.lenght+1);
+        }*/
         // ========== Lands
+            
+            // Mappiings
 
             function getlandOwner(string calldata landId) public view returns(address){
                 return _landsOwners[landId];
@@ -214,24 +225,38 @@ contract Lands{
                 _landsBuilding[landId] = building;
             }
 
+            // Arrays
+
             function getAllLands() public view returns(string[] memory){
                 return allLands;
             }
 
-            function setAllLands(string[] memory lands) public {
-                delete allLands;
-                allLands = new string[](lands.length);
-                allLands = lands;
+            function addToAllLands(string memory land, uint256 landType) public {
+                allLands.push(land);
+                allLandsTypes.push(landType);
             }
+
+            function removeFromAllLands(string memory land) public {
+                string[] memory temp = new string[](numberOfAllLands-1);
+                uint256[] memory tempTy = new uint256[](numberOfAllLands-1);
+                uint256 co = 0;
+                for(uint i=0; i<numberOfAllLands; i++){
+                    if(!compareStrings(allLands[i],land)){
+                        temp[co] = allLands[i];
+                        tempTy[co] = allLandsTypes[i];
+                        co++;
+                    }
+                }
+                numberOfAllLands--;
+                delete allLands;
+                delete allLandsTypes;
+                allLands = temp;
+                allLandsTypes = tempTy;
+            }
+
 
             function getAllLandsTypes() public view returns(uint256[] memory){
                 return allLandsTypes;
-            }
-
-            function setAllLandsTypes(uint256[] memory landsTypes) public {
-                delete allLands;
-                allLandsTypes = new uint256[](landsTypes.length);
-                allLandsTypes = landsTypes;
             }
 
             function getNumberOfAllLands() public view returns(uint256){
@@ -245,22 +270,36 @@ contract Lands{
             function getLandsToSellId() public view returns(string[] memory){
                 return landsToSellId;
             }
-
-            function setLandsToSellId(string[] memory lands) public {
-                delete landsToSellId;
-                landsToSellId = new string[](lands.length);
-                landsToSellId = lands;
-            }
-
+            
             function getLandsToSellPrice() public view returns(uint256[] memory){
                 return landsToSellPrice;
             }
 
-            function setLandsToSellPrice(uint256[] memory lands) public {
-                delete landsToSellPrice;
-                landsToSellPrice = new uint256[](lands.length);
-                landsToSellPrice = lands;
+            function addLandToSellList(string memory lands, uint256 price) public {
+                landsToSellId.push(lands);
+                landsToSellPrice.push(price);
             }
+
+            function removeLandFromSellList(string memory land) public {
+                uint256 num = numberOfAllSellLandsList;
+                string[] memory temp = new string[](num-1);
+                uint256[] memory tempPr = new uint256[](num-1);
+                uint256 co = 0;
+                for(uint i=0; i<num; i++){
+                    if(!compareStrings(landsToSellId[i],land)){
+                        temp[co] = landsToSellId[i];
+                        tempPr[co] = landsToSellPrice[i];
+                        co++;
+                    }
+                }
+                numberOfAllSellLandsList--;
+                delete landsToSellId;
+                delete landsToSellPrice;
+                landsToSellId = temp;
+                landsToSellPrice = tempPr;
+            }
+
+
   
 
         //
@@ -268,6 +307,7 @@ contract Lands{
 
         // ========== Permits
 
+            // mappings
             function getPermitOwner(string calldata PermitId) public view returns(address){
                 return _permitsOwners[PermitId];
             }
@@ -292,12 +332,12 @@ contract Lands{
                 _permitsLandType[PermitId] = landType;
             }
 
-            function getPermitUsed(string calldata landId) public view returns(bool){
-                return _permitUsed[landId];
+            function getPermitUsed(string calldata permitId) public view returns(bool){
+                return _permitUsed[permitId];
             }
 
-            function setPermitUsed(string calldata landId, bool state) public {
-                _permitUsed[landId] = state;
+            function setPermitUsed(string calldata permitId, bool state) public {
+                _permitUsed[permitId] = state;
             }
 
             function getNumberOfPermits(address adr) public view returns(uint256){
@@ -312,18 +352,18 @@ contract Lands{
                 return _addressPermits[adr];
             }
 
-            function setAddressPermits(address adr, string[] memory Permits) public {
-                _addressPermits[adr] = Permits;
+            function addToAddressPermits(address adr, string memory Permit) public {
+                _addressPermits[adr].push(Permit);
+            }
+
+            // Arrays
+            function addToAllPermits(string memory Permits) public {
+                allPermits.push(Permits);
+                //numberOfAllPermits++;
             }
 
             function getAllPermits() public view returns(string[] memory){
                 return allPermits;
-            }
-
-            function setAllPermits(string[] memory Permits) public {
-                delete allPermits;
-                allPermits = new string[](Permits.length);
-                allPermits = Permits;
             }
 
             function getAllPermitsTypes() public view returns(uint256[] memory){
@@ -434,7 +474,7 @@ contract Lands{
 
 }
 
-
+/*
 interface ILandsStorage{
 
     // ========== Lands
@@ -482,6 +522,8 @@ interface ILandsStorage{
         function getLandsToSellPrice() external view returns(uint256[] memory);
 
         function setLandsToSellPrice(uint256[] memory lands) external;
+
+        function removeLandFromSellList(string memory land) external;
 
     //
 
@@ -564,5 +606,5 @@ interface ILandsStorage{
         function setBuildingType(string calldata BuildingId, uint256 BuildingType) external;
     //
 }
-
+*/
 

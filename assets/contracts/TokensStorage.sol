@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0; 
 
-contract Tokens{
+contract TokenStorage{
 
     // ==================== STORAGE
 
@@ -27,13 +27,22 @@ contract Tokens{
         mapping(string => uint256) private _Bakery;
         mapping(string => uint256) private _Windmill;
 
+        // sell data
+        // meat
+        uint256[] sellTicketIds;
+        uint256[] sellMeatSellerId;
+        uint256[] sellMeatAmont;
+        uint256[] sellMeatPrice;
+        uint256 smtNum = 0;
+        uint256 smtIndex = 0;
+
     //
 
 
     // ==================== Methods - Special
 
         function getInventory(address to) public view returns(uint256[] memory) {
-            uint256[] memory results = new uint256[](9);
+            uint256[] memory results = new uint256[](10);
             results[0] = _OpousMoneyBalances[to];
             results[1] = _ElectricityBalances[to];
             results[2] = _WheatBalances[to];
@@ -57,12 +66,91 @@ contract Tokens{
             _BodyHealthBalances[to] = data[6];
             _BodyFatBalances[to] = data[7];
             _BodyEnergyBalances[to] = data[8];
-             _Birthday[to] = data[9];
+            _Birthday[to] = data[9];
         }
 
     //
 
+    // ==================== Methods - Sell
 
+        function addSellMeat( uint256 amount, uint256 price) public{
+
+            address to = tx.origin;
+            require(_MeatBalances[to] > amount,"Not enugh meat");
+            uint256 seller = _PersonId[to];
+            _MeatBalances[to] -= amount;
+            sellTicketIds.push(smtNum);
+            sellMeatSellerId.push(seller);
+            sellMeatAmont.push(amount);
+            sellMeatPrice.push(price);
+            smtNum++;
+            smtIndex++;
+
+        }
+        
+
+        function removeSellMeat( uint256 sellTicketId) public{
+
+            uint256[] memory tempTickets = new uint256[](smtIndex-1);
+            uint256[] memory tempSellers = new uint256[](smtIndex-1);
+            uint256[] memory tempAmounts = new uint256[](smtIndex-1);
+            uint256[] memory tempPrices = new uint256[](smtIndex-1);
+            uint256 counter = 0;
+
+            for(uint i=0; i < smtIndex; i++){
+                if(i != sellTicketId){
+                    tempTickets[counter] = sellTicketIds[counter];
+                    tempSellers[counter] = sellMeatSellerId[counter];
+                    tempAmounts[counter] = sellMeatAmont[counter];
+                    tempPrices[counter] = sellMeatPrice[counter];
+                    counter++;
+                }
+            }
+
+            delete sellTicketIds;
+            delete sellMeatSellerId;
+            delete sellMeatAmont;
+            delete sellMeatPrice;
+
+            sellTicketIds = tempTickets;
+            sellMeatSellerId = sellMeatSellerId;
+            sellMeatAmont = sellMeatAmont;
+            sellMeatPrice = sellMeatPrice;
+
+            smtIndex--;
+        }
+
+        function getSellMeat(uint256 ticketId) public view returns(uint256[] memory){
+            require(ticketId <= smtNum, "Ticket not valid");
+            uint256[] memory res = new uint256[](4);
+
+            for(uint i; i < smtIndex; i++){
+                if( sellTicketIds[i] == ticketId ){
+                    require(sellMeatAmont[i] > 0, "Ticket not valid 2");
+                    res[0] = ticketId;
+                    res[1] = sellMeatSellerId[i];
+                    res[2] = sellMeatAmont[i];
+                    res[3] = sellMeatPrice[i];
+                }
+            }
+            return res;
+
+        }
+
+        function getAllSellMeat() public view returns(string[] memory){
+            string[] memory res = new string[](smtIndex);
+            for(uint i; i < smtIndex; i++){
+                string memory r0 = append(u2s(sellTicketIds[i]),u2s(sellMeatSellerId[i]));
+                string memory r1 = append(r0,u2s(sellMeatAmont[i]));
+                string memory r2 = append(r1,u2s(sellMeatPrice[i]));
+                res[i]=r2;
+            }
+            return res;
+        }
+    //
+
+    
+    
     // ==================== Methods - Standard
 
 
@@ -221,6 +309,34 @@ contract Tokens{
         
 
 
+    //
+
+    // ==================== Latheral
+        function u2s(uint _i) internal pure returns (string memory _uintAsString) {
+            if (_i == 0) {
+                return "0";
+            }
+            uint j = _i;
+            uint len;
+            while (j != 0) {
+                len++;
+                j /= 10;
+            }
+            bytes memory bstr = new bytes(len);
+            uint k = len;
+            while (_i != 0) {
+                k = k-1;
+                uint8 temp = (48 + uint8(_i - _i / 10 * 10));
+                bytes1 b1 = bytes1(temp);
+                bstr[k] = b1;
+                _i /= 10;
+            }
+            return string(bstr);
+        }
+
+        function append(string memory a, string memory b) internal pure returns (string memory) {
+            return string(abi.encodePacked( a, "-", b));
+        }
     //
 
 }
