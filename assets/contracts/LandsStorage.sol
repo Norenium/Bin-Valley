@@ -164,7 +164,6 @@ contract LandsStorage{
         //
 
 
-
     //
 
 
@@ -275,28 +274,35 @@ contract LandsStorage{
                 return landsToSellPrice;
             }
 
+            function getNumberOfAllSellLandsList() public view returns(uint256){
+                return numberOfAllSellLandsList;
+            }
+
             function addLandToSellList(string memory lands, uint256 price) public {
                 landsToSellId.push(lands);
                 landsToSellPrice.push(price);
+                numberOfAllSellLandsList++;
             }
 
             function removeLandFromSellList(string memory land) public {
+
                 uint256 num = numberOfAllSellLandsList;
-                string[] memory temp = new string[](num-1);
-                uint256[] memory tempPr = new uint256[](num-1);
-                uint256 co = 0;
-                for(uint i=0; i<num; i++){
-                    if(!compareStrings(landsToSellId[i],land)){
-                        temp[co] = landsToSellId[i];
-                        tempPr[co] = landsToSellPrice[i];
-                        co++;
-                    }
-                }
-                numberOfAllSellLandsList--;
+                string[] memory temp = landsToSellId;
+                uint256[] memory tempPr = landsToSellPrice;
                 delete landsToSellId;
                 delete landsToSellPrice;
-                landsToSellId = temp;
-                landsToSellPrice = tempPr;
+                //landsToSellId = new string[](num-1);
+                //landsToSellPrice = new uint256[](num-1);
+
+                
+                for(uint i=0; i<num; i++){
+                    if(!compareStrings(temp[i],land)){
+                        landsToSellId.push(temp[i]);
+                        landsToSellPrice.push(tempPr[i]);
+                    }
+                }
+
+                numberOfAllSellLandsList--;
             }
 
 
@@ -413,21 +419,21 @@ contract LandsStorage{
                 return allBuildings;
             }
 
-            function setAllBuildings(string[] memory Buildings) public {
-                delete allBuildings;
-                allBuildings = new string[](Buildings.length);
-                allBuildings = Buildings;
+            function addToAllBuildings(string memory buildingId, uint256 buildingType) public {
+                allBuildings.push(buildingId);
+                allBuildingsTypes.push(buildingType);
+            }
+
+            function removeFromAllBuildings(string[] memory Buildings) public {
+                
+                // Must implement later
             }
 
             function getAllBuildingsTypes() public view returns(uint256[] memory){
                 return allBuildingsTypes;
             }
 
-            function setAllBuildingsTypes(uint256[] memory BuildingsTypes) public {
-                delete allBuildings;
-                allBuildingsTypes = new uint256[](BuildingsTypes.length);
-                allBuildingsTypes = BuildingsTypes;
-            }     
+             
 
             function getNumberOfAllBuildings() public view returns(uint256){
                 return numberOfAllBuildings;
@@ -449,8 +455,13 @@ contract LandsStorage{
                 return _addressBuildings[adr];
             }
 
-            function setAddressBuildings(address adr, string[] memory Buildings) public {
-                _addressBuildings[adr] = Buildings;
+            function addToAddressBuildings(address adr, string memory buildingId) public {
+                _addressBuildings[adr].push(buildingId);
+            }
+
+            function removeFromAddressBuildings(address adr, string memory buildingId) public {
+                // Must implement later
+
             }
 
             function getNumberOfBuildings(address adr) public view returns(uint256){

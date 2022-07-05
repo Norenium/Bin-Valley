@@ -5,6 +5,14 @@ contract LandsAgent{
 
     // ====================  ADMINISTRATIVE
 
+
+        // ================ FEES ================
+            
+            uint256 permitFee = 10;
+            uint256 buildingFee = 30;
+
+        // 
+
         //string[]  lands = ["AS21","AT20","AT21","AT22","AT24","AU23","AU24","AW20","AW21","AW22","AX21","AX22","AS22","AS23","AS24","AS26","AT23","AN27","AN29","AN31"];
         //uint8[]  types = [4,4,4,4,4,4,4,4,4,4,4,4,3,3,3,3,3,0,0,0];
         string[]  lands = ["AQ21","AR21","AQ22","AR22","AS22","AS23","AT23","AR27","AS27","AT27","AS21","AT22","AU23","AT26","AU26","AU27","AT28","AU28","AN27","AM28","AN29","AM30","AN30"];
@@ -167,8 +175,9 @@ contract LandsAgent{
                 require(pt < 6 , "Permit type is not valid");
                 require(lt < 6 , "Land type is not valid");
                 require(TAaddress != address(0) , "Token agent not set");
-                
-                TA.pay(0xA02B2223d1ee0584545ffc804c518693C1d76de0,100);
+                require(TA.isAvailable(),"Token agent not abaillable");
+
+                TA.pay(0xA02B2223d1ee0584545ffc804c518693C1d76de0,permitFee);
                 uint256 numbreOfAllPermits = LS.getNumberOfAllPermits();
 
                 string memory typeStr;
@@ -237,8 +246,9 @@ contract LandsAgent{
 
                 require(!LS.getLandHasBuilding(landId), "Land has a building");
                 require(LS.getPermitsLandType(permitId) == LS.getLandType(landId),"types not same");
+                require(TA.isAvailable(),"Token agent not abaillable");
                 
-                TA.pay(0xA02B2223d1ee0584545ffc804c518693C1d76de0,100);
+                TA.pay(0xA02B2223d1ee0584545ffc804c518693C1d76de0,buildingFee);
 
                 LS.setPermitUsed(permitId, true);
                 LS.setLandHasBuilding(landId, true);
@@ -254,25 +264,20 @@ contract LandsAgent{
  
                 LS.setBuildingOwner(buildingId, to);
   
-  
-                delete adLands;
-                adLands = LS.getAddressBuildings(to);
-                adLands.push(buildingId);
-                LS.setAddressBuildings(to, adLands);
+                
+                LS.addToAddressBuildings(to, buildingId);
 
                 
-                delete allLandsTemp;
-                allLandsTemp = LS.getAllBuildings();
-                allLandsTemp.push(buildingId);
-                LS.setAllBuildings(allLandsTemp);
+            
 
 
-                delete allLandsTypeTemp;
-                allLandsTypeTemp = LS.getAllBuildingsTypes();
-                uint bt = LS.getPermitType(permitId);
-                allLandsTypeTemp.push(bt);
-                LS.setAllBuildingsTypes(allLandsTypeTemp);
+                
+                uint256 bt = LS.getPermitType(permitId);
+                
+                LS.addToAllBuildings(buildingId,bt);
+
                 LS.setBuildingType(buildingId, bt);
+
 
               
                 emit TransferBuilding(address(0), to, buildingId);
@@ -293,7 +298,7 @@ contract LandsAgent{
 
     //  ==================== TRANSFER
 
-        function transferLand ( address from, address to, string memory landId) private {
+        function transferLand ( address from, address to, string memory landId) public {
 
             require(to != address(0), "Send to the zero address");
             require(_landExists(landId), "Not existed");
@@ -462,8 +467,9 @@ contract LandsAgent{
 
             function buyLand(string memory landId, uint256 buyPrice) public {
                 uint256 price = getLandPrice(landId);
-                require(price>0); // listed ad sell
+                require(price > 0); // listed ad sell
                 require(price == buyPrice); // check correctness
+                require(TA.isAvailable(),"Token agent not abaillable");
 
                 // Payment
                 address seller = LS.getlandOwner(landId);
@@ -542,146 +548,158 @@ contract LandsAgent{
 }
 
 
-
-interface ILandsStorage{
-
-    // ========== Lands
-
-        
-        function addToAllLands(string memory land, uint256 landType) external;
-
-        function getlandOwner(string calldata landId) external view returns(address);
-
-        function setlandOwner(string calldata landId, address adr) external;
-
-        function getNumberOfLands(address adr) external view returns(uint256);
-
-        function setNumberOfLands(address adr, uint256 number) external;
-
-        function getAddressLands(address adr) external view returns(string[] memory);
-
-        function setAddressLands(address adr, string[] calldata lands) external ;
-
-        function getLandType(string calldata landId) external view returns(uint256);
-
-        function setLandType(string calldata landId, uint256 landType) external;
-
-        function getLandHasBuilding(string calldata landId) external view returns(bool);
-        
-        function setLandHasBuilding(string calldata landId, bool state) external;
-
-        function getLandsBuilding(string calldata landId) external view returns(string memory);
-
-        function setLandsBuilding(string calldata landId, string memory building) external;
-
-        function getAllLands() external view returns(string[] memory);
-
-        function setAllLands(string[] memory lands) external;
-        
-        function getAllLandsTypes() external view returns(uint256[] memory);
-
-        function setAllLandsTypes(uint256[] memory landsTypes) external ;
-
-        function getNumberOfAllLands() external view returns(uint256);
-
-        function setNumberOfAllLands(uint256 number) external;
-
-        function getLandsToSellId() external view returns(string[] memory);
-        //       getLandsToSellId
-
-        function addLandToSellList(string memory lands, uint256 price) external;
-
-        function getLandsToSellPrice() external view returns(uint256[] memory);
-
-
-    //
-
-
-    // ========== Permits
-
-        function getPermitOwner(string calldata PermitId) external view returns(address);
-
-        function setPermitOwner(string calldata PermitId, address adr) external;
-        
-        function getPermitType(string calldata PermitId) external view returns(uint256);
-
-        function setPermitType(string calldata PermitId, uint256 permitType) external ;
-
-        function getPermitsLandType(string calldata PermitId) external view returns(uint256);
-
-        function setPermitsLandType(string calldata PermitId, uint256 landType) external ;
-
-        function getNumberOfPermits(address adr) external view returns(uint256);
-
-        function setNumberOfPermits(address adr, uint256 number) external;
-
-        function getAddressPermits(address adr) external view returns(string[] memory);
-
-        function addToAddressPermits(address adr, string memory Permit) external;
-        
-        function getPermitUsed(string calldata landId) external view returns(bool);
-
-        function setPermitUsed(string calldata landId, bool state) external;
-
-        function getAllPermits() external view returns(string[] memory);
-
-        function addToAllPermits(string memory Permits) external ;
-
-        function getAllPermitsTypes() external view returns(uint256[] memory);
-
-        function setAllPermitsTypes(uint256[] memory PermitsTypes) external;
-
-        function getNumberOfAllPermits() external view returns(uint256);
-
-        function setNumberOfAllPermits(uint256 number) external;
-
-        function getPermitsToSellId() external view returns(string[] memory);
-
-        function setPermitsToSellId(string[] memory Permits) external;
-
-        function getPermitsToSellPrice() external view returns(string[] memory);
-
-        function setPermitsToSellPrice(string[] memory Permits) external;
-
-        function removeLandFromSellList(string memory landId) external;
-        
-    //
-
-    // ========== Buildings
-
-        function getAllBuildings() external view returns(string[] memory);
-
-        function setAllBuildings(string[] memory Buildings) external;
-
-        function getAllBuildingsTypes() external view returns(uint256[] memory);
-
-        function setAllBuildingsTypes(uint256[] memory BuildingsTypes) external;
-
-        function getNumberOfAllBuildings() external view returns(uint256);
-
-        function setNumberOfAllBuildings(uint256 number) external;
-
-        function getBuildingOwner(string calldata BuildingId) external view returns(address);
-
-        function setBuildingOwner(string calldata BuildingId, address adr) external;
-
-        function getAddressBuildings(address adr) external view returns(string[] memory);
-
-        function setAddressBuildings(address adr, string[] memory Buildings) external;
-
-        function getNumberOfBuildings(address adr) external view returns(uint256);
-
-        function setNumberOfBuildings(address adr, uint256 number) external;      
-
-        function getBuildingType(string calldata BuildingId) external view returns(uint256);
-
-        function setBuildingType(string calldata BuildingId, uint256 BuildingType) external;
-
-    //
-}
-
 interface ITokenAgent{
 
-        function pay(address to, uint256 amount) external;
+    function pay(address to, uint256 amount) external;
+    function isAvailable() external pure returns (bool);
+}
+
+
+interface ILandsStorage{
+ 
+    // ==================== METHODS Get Add Remove ====================
+
+        // ========== Lands
+            
+            // Mappiings
+
+            function getlandOwner(string calldata landId) external view returns(address);
+            
+            function setlandOwner(string calldata landId, address adr) external ;
+
+            function getNumberOfLands(address adr) external view returns(uint256);
+
+            function setNumberOfLands(address adr, uint256 number) external ;
+
+            function getAddressLands(address adr) external view returns(string[] memory);
+
+            function setAddressLands(address adr, string[] memory lands) external ;
+
+            function getLandType(string calldata landId) external view returns(uint256);
+
+            function setLandType(string calldata landId, uint256 landType) external ;
+
+            function getLandHasBuilding(string calldata landId) external view returns(bool);
+
+            function setLandHasBuilding(string calldata landId, bool state) external ;
+
+            function getLandsBuilding(string calldata landId) external view returns(string memory);
+
+            function setLandsBuilding(string calldata landId, string memory building) external ;
+
+            // Arrays
+
+            function getAllLands() external view returns(string[] memory);
+
+            function addToAllLands(string memory land, uint256 landType) external ;
+
+            function removeFromAllLands(string memory land) external ;
+
+
+            function getAllLandsTypes() external view returns(uint256[] memory);
+
+            function getNumberOfAllLands() external view returns(uint256);
+
+            function setNumberOfAllLands(uint256 number) external ;
+
+            function getLandsToSellId() external view returns(string[] memory);
+            
+            function getLandsToSellPrice() external view returns(uint256[] memory);
+
+            function addLandToSellList(string memory lands, uint256 price) external ;
+
+            function removeLandFromSellList(string memory land) external ;
+
+
+  
+
+        //
+
+
+        // ========== Permits
+
+            // mappings
+            function getPermitOwner(string calldata PermitId) external view returns(address);
+
+            function setPermitOwner(string calldata PermitId, address adr) external ;
+
+            function getPermitType(string calldata PermitId) external view returns(uint256);
+
+            function setPermitType(string calldata PermitId, uint256 permitType) external ;
+
+            function getPermitsLandType(string calldata PermitId) external view returns(uint256);
+
+            function setPermitsLandType(string calldata PermitId, uint256 landType) external ;
+
+            function getPermitUsed(string calldata permitId) external view returns(bool);
+
+            function setPermitUsed(string calldata permitId, bool state) external ;
+
+            function getNumberOfPermits(address adr) external view returns(uint256);
+
+            function setNumberOfPermits(address adr, uint256 number) external ;
+
+            function getAddressPermits(address adr) external view returns(string[] memory);
+
+            function addToAddressPermits(address adr, string memory Permit) external ;
+
+            // Arrays
+            function addToAllPermits(string memory Permits) external ;
+
+            function getAllPermits() external view returns(string[] memory);
+
+            function getAllPermitsTypes() external view returns(uint256[] memory);
+
+            function setAllPermitsTypes(uint256[] memory PermitsTypes) external ;
+
+            function getNumberOfAllPermits() external view returns(uint256);
+
+            function setNumberOfAllPermits(uint256 number) external ;
+
+            function getPermitsToSellId() external view returns(string[] memory);
+
+            function setPermitsToSellId(string[] memory Permits) external ;
+
+            function getPermitsToSellPrice() external view returns(string[] memory);
+
+            function setPermitsToSellPrice(string[] memory Permits) external ;
+            
+        //
+
+
+         // ========== Buildings
+
+            function getAllBuildings() external view returns(string[] memory);
+
+            function addToAllBuildings(string memory buildingId, uint256 buildingType) external;
+
+            function removeFromAllBuildings(string[] memory Buildings) external ;
+
+            function getAllBuildingsTypes() external view returns(uint256[] memory);
+
+            function getNumberOfAllBuildings() external view returns(uint256);
+
+            function setNumberOfAllBuildings(uint256 number) external ;
+
+            function getBuildingOwner(string calldata BuildingId) external view returns(address);
+
+            function setBuildingOwner(string calldata BuildingId, address adr) external ;
+
+            function getAddressBuildings(address adr) external view returns(string[] memory);
+
+            function addToAddressBuildings(address adr, string memory buildingId) external ;
+
+            function removeFromAddressBuildings(address adr, string memory buildingId) external ;
+
+            function getNumberOfBuildings(address adr) external view returns(uint256);
+
+            function setNumberOfBuildings(address adr, uint256 number) external ;
+            
+            function getBuildingType(string calldata BuildingId) external view returns(uint256);
+
+            function setBuildingType(string calldata BuildingId, uint256 BuildingType) external ;
+
+        //
+    //
 
 }

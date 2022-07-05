@@ -2,6 +2,53 @@ document.getElementById('show-land-id').addEventListener('click', toggleShowLand
 document.getElementById('show-for-sale').addEventListener('click', toggleShowSale);
 document.getElementById('back').addEventListener('click', back);
 setSalesList();
+var lana = 'id:AS21';
+var allBuildings = new Array;
+console.log(typeof (allBuildings));
+allBuildings.push('AN27-HC-0');
+allBuildings.push('AM28-HC-2');
+allBuildings.push('AN29-HC-3');
+//setBuildings();
+
+function setBuildings() {
+      var lands = document.getElementsByClassName('mp');
+      for (let i = 0; i < allBuildings.length; i++) {
+            var building = allBuildings[i].split("-");
+            //console.info(building);
+            var buildingCor = building[0];
+            //console.log('bc:  ' + buildingCor);
+            var buildingType = building[1];
+            var cors = "";
+            for (let j = 0; j < lands.length; j++) {
+                  var cor = lands[j].innerHTML.toString().substring(3, 7);
+                  //console.log('cor: ' + cor);
+                  cors += buildingCor;
+                  if (cor.toString() == buildingCor) {
+                        console.log('cor: ' + cor + '     -bc: ' + buildingCor);
+                        switch (buildingType) {
+                              case 'HC':
+                                    var imgId = lands[j].nextElementSibling.id;
+                                    document.getElementById(imgId).src = './assets/images/Lands/HC1.png';
+                                    console.info();
+
+                                    //.src = ""
+                                    break;
+
+                              default:
+                                    break;
+                        }
+                  }
+            }
+            setTimeout(() => {
+                  //console.log(cors);
+
+            }, 500);
+      }
+}
+
+
+
+
 
 function back() {
 
@@ -41,7 +88,7 @@ function showSales() {
                         saleIdsText.push(all[i].innerHTML);
                         document.getElementById(all[i].id).style.display = "block";
                         all[i].innerHTML += '<p>Price: ' + salesList[j].price + ' OP <button class="tool-btn btn-small"  id="buyLand-' + salesList[j].landId.toString() + '">Buy</button> Type: ' + salesList[j].landType + '</p>';
-                        document.getElementById('buyLand-' + salesList[j].landId.toString()).addEventListener('click', function(){
+                        document.getElementById('buyLand-' + salesList[j].landId.toString()).addEventListener('click', function () {
                               buyLand(salesList[j].landId.toString());
                         });
                   }
@@ -51,9 +98,10 @@ function showSales() {
 }
 function buyLand(landId) {
       //window.alert('call for buy: ' + landId);
-      setCookie   ('buyLand',landId, 0.01);
-      window.location.href='./index.html';
+      setCookie('buyLand', landId, 0.01);
+      window.location.href = './index.html';
 }
+
 function hideSales() {
       for (let j = 0; j < saleIds.length; j++) {
             var el = document.getElementById(saleIds[j]);

@@ -49,6 +49,10 @@ contract TokenAgent{
                 LAAddress = LandAgentAde;
                 LA = ILandsAgent(LAAddress);
             }
+
+            function isAvailable() public pure returns (bool){
+                return true;
+            }
         
         //
 
