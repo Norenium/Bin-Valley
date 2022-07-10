@@ -72,7 +72,7 @@
                   </div>
             </div>
       </div>
-      <div class="connect-wallet" id="start-div" style="display: block;">
+      <div class="connect-wallet" id="start-div" style="display: none;">
             <h4>Start</h4>
             <p>Seems you haven't been in the game yet. Pick a name and start:</p>
 
@@ -228,13 +228,40 @@
                         <div class="row col-12">
                               <div class="col-6">
 
-                                    <!-- <div class="control-unit  " id="my-lands">
-                                          <p>My Lands: </p>
+                                    <div class="control-unit">
+                                          <p>Eat food:</p>
                                           <hr>
+                                          <br>
+                                          <div class="input-group input-group-sm mb-3">
+                                                <span class="input-group-text inp-color" id="inputGroup-sizing-sm">Eat
+                                                      Meat: </span>
+                                                <input type="number" class="form-control" value="50"
+                                                      aria-label="Sizing example input"
+                                                      aria-describedby="inputGroup-sizing-xs" id="eat-meat-inp">
+                                                <button onclick="EatMeat()" class="btn btn-outline-primary"
+                                                      type="button">Eat</button>
+                                          </div>
+                                          <div class="input-group input-group-sm mb-3">
+                                                <span class="input-group-text inp-color" id="inputGroup-sizing-sm">Eat
+                                                      Bread: </span>
+                                                <input type="number" class="form-control" value="50"
+                                                      aria-label="Sizing example input"
+                                                      aria-describedby="inputGroup-sizing-xs" id="eat-bread-inp">
+                                                <button onclick="EatBread()" class="btn btn-outline-primary"
+                                                      type="button">Eat</button>
+                                          </div>
+                                          <div class="input-group input-group-sm mb-3">
+                                                <span class="input-group-text inp-color" id="inputGroup-sizing-sm">Eat
+                                                      Sandwich: </span>
+                                                <input type="number" class="form-control" value="50"
+                                                      aria-label="Sizing example input"
+                                                      aria-describedby="inputGroup-sizing-xs" id="eat-sandwich-inp">
+                                                <button onclick="EatSandwich()" class="btn btn-outline-primary"
+                                                      type="button">Eat</button>
+                                          </div>
 
 
-
-                                    </div> -->
+                                    </div>
                               </div>
                               <div class="col-6">
 
@@ -242,9 +269,14 @@
                                     <div class="control-unit">
                                           <p>Work:</p>
                                           <hr>
+
                                           <p>Hunting: </p>
                                           <p class="alert alert-danger" role="alert">You have not any hunting camp.</p>
-                                          <p>Time to next hunt: 5H 22M</p>
+                                          <div id="hunting-time" style="display: none;">
+                                                <p>Time to next hunt: 5H 22M</p>
+                                                <button onclick="Hunt()" class="connect-wallet-btn" id="hunt-btn"
+                                                      style="display: block;" disabled>Hunt</button>
+                                          </div>
                                     </div>
                               </div>
 
@@ -281,6 +313,12 @@
                               <div class="panel1" id="my-lands" style="display: none;">
                                     <hr>
                               </div>
+                              <div id="loading-lands" class="text-center">
+                                    <div class="spinner-border " role="status">
+                                          <span class="visually-hidden">Loading...</span>
+                                    </div>
+                              </div>
+                              <p id="no-lands" style="display: none;">You have not any Land yet.</p>
 
 
                         </div>
@@ -295,7 +333,16 @@
                                                 expand_more</span>
                                     </span>
                               </p>
-                              <div id="sell-list"   style="display: block;"><hr></div>
+                              <div id="sell-list" style="display: block;">
+                                    <hr>
+                                    <div id="loading-sell-lands" class="text-center">
+                                          <div class="spinner-border " role="status">
+                                                <span class="visually-hidden">Loading...</span>
+                                          </div>
+                                    </div>
+                                    <p id="no-sell-lands" style="display: none;">There are no lands to sell yet.</p>
+
+                              </div>
                         </div>
                         <br>
                         <div class="control-unit" id="my-permits-div">
@@ -306,21 +353,23 @@
                               </div>
                         </div>
                         <br>
-                        <div class="control-unit" id="my-permits-div" >
+                        <div class="control-unit" id="my-permits-div">
                               <p>My Buildings:</p>
                               <hr>
-                                    <div id="my-buildings-list">
+                              <div id="my-buildings-list">
 
-                                          <div id="loading-building" class="text-center"><div class="spinner-border " role="status">
+                                    <div id="loading-building" class="text-center">
+                                          <div class="spinner-border " role="status">
                                                 <span class="visually-hidden">Loading...</span>
-                                              </div></div>
-                                          <p id="no-building" style="display: none;">You have not any building yet.</p>
-                                                
+                                          </div>
                                     </div>
+                                    <p id="no-building" style="display: none;">You have not any building yet.</p>
+
+                              </div>
                         </div>
                         <br>
                         <div class="control-unit">
-                              <p>List a land to sale:</p>
+                              <p>List a land to sell:</p>
                               <hr>
                               <div>
                                     <div class="land-for-sale col-8 row">
@@ -525,7 +574,8 @@
 
       <script src="./assets/node_modules/ethers/dist/ethers.umd.min.js"></script>
       <script src="assets/js/consts.js"></script>
-      <script src="assets/js/intract.js"></script>
+      <script src="assets/js/onPageWallet.js"></script>
+      <script src="assets/js/indexManager.js"></script>
       <script src="assets/js/main.js"></script>
 
 </body>
