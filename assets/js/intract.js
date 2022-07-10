@@ -1,4 +1,38 @@
 StartContract();
+/*
+function getWhenCanHunt() {
+      myContract.charlieCall(32, ["0x87B64804e36f20acA9052D3b4Cd7188D41b59f97"], [""], []).then(res => {
+
+            console.log('res: ' + res);
+            var tim = new Date(Number(res * 1000));
+            console.log('latest hunt hunt: ' + tim);
+
+            var timT = new Date(Number((res + 600) * 1000));
+            console.log(' next hunt: ' + timT);
+
+            var nw = (new Date()).getTime() / 1000;
+            console.log(' till to next hunt: ' + (res + 600) - nw);
+
+            if (true) { // condition needed to be implement
+                  document.getElementById('hunt-btn').style.display = "block";
+                  document.getElementById('hunt-btn').addEventListener('click', Hunt);
+            }
+      })
+}
+*/
+function EatMeat() {
+      var amount = document.getElementById('eat-meat-inp').value;
+      myContract.deltaCall(32, ["0x87B64804e36f20acA9052D3b4Cd7188D41b59f97"], [""], [amount]).then(res => {
+            console.log('Eat meat done');
+      })
+}
+
+function Hunt() {
+      myContract.deltaCall(35, ["0x87B64804e36f20acA9052D3b4Cd7188D41b59f97"], [""], []).then(res => {
+            console.log('Hunt doen: ');
+      })
+}
+
 
 var myName = "";
 let land = new Array();
@@ -59,6 +93,14 @@ function setPageData() {
       }
       );
       setLandData();
+      getWhenCanHunt().then(res => {
+            if (res == false) {
+                  console.log('getWhenHunt FALSE ');
+                  console.log('getWhenHunt from intract. res:' + res);
+
+            }
+            console.log('getWhenHunt from intract. res:' + res);
+      });
 };
 var pricesArray;
 var landIdArray;
@@ -133,7 +175,7 @@ function setLandData() {
                         });
 
                         setMyLands();
-
+                        getWhenCanHunt();
                   }
 
             });

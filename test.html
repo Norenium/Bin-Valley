@@ -46,9 +46,6 @@
 </head>
 
 <body>
-
-
-
       <div class="body-box">
             <h1>Market board</h1>
             <p>Lands and goods market here:</p>
@@ -60,24 +57,32 @@
                   <div id="sell-list"></div>
             </div>
             <br>
+
+            <div class="control-unit">
+                  <p>Timer Test:</p>
+                  <hr>
+                  <div>To next hunt: <span id="timer-test">---</span></div>
+            </div>
+            <br>
             <div class="control-unit">
                   <p>List a land to sale:</p>
                   <hr>
                   <div>
                         <div class="land-for-sale col-12 row">
 
-
                               <div class="col-8 row ">
                                     <div class="input-group input-group-sm mb-3">
-                                          <span class="input-group-text inp-color" id="inputGroup-sizing-sm">Enter Land Id: </span>
-                                          <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-xs">
-                                        </div>
-                                        <div class="input-group input-group-sm mb-3">
-                                          <span class="input-group-text inp-color" id="inputGroup-sizing-sm">Enter Price: &nbsp;&nbsp;&nbsp; </span>
-                                          <input type="number" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
-                                        </div>
-
-
+                                          <span class="input-group-text inp-color" id="inputGroup-sizing-sm">Enter Land
+                                                Id: </span>
+                                          <input type="text" class="form-control" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-xs">
+                                    </div>
+                                    <div class="input-group input-group-sm mb-3">
+                                          <span class="input-group-text inp-color" id="inputGroup-sizing-sm">Enter
+                                                Price: &nbsp;&nbsp;&nbsp; </span>
+                                          <input type="number" class="form-control" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-sm">
+                                    </div>
                               </div>
 
                               <div class="col-4">
@@ -90,6 +95,15 @@
                   </div>
             </div>
       </div>
+
 </body>
+
+<script src="./assets/node_modules/ethers/dist/ethers.umd.min.js"></script>
+<script src="assets/js/consts.js"></script>
+<script src="assets/js/onPageWallet.js"></script>
+<script src="assets/js/test.js"></script>
+<!-- <script src="assets/js/intract.js"></script>
+<script src="assets/js/main.js"></script> -->
+
 
 </html>
