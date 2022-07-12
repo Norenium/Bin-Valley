@@ -167,6 +167,8 @@
                                                 <br>
                                                 <a class="connect-wallet-btn btn-sm" href="./maptest.html"
                                                       target="_blank">Open the map</a>
+                                                <br>
+
                                           </div>
                                     </div>
 
@@ -231,16 +233,18 @@
                                     <div class="control-unit">
                                           <p>Eat food:</p>
                                           <hr>
-                                          <br>
                                           <div class="input-group input-group-sm mb-3">
                                                 <span class="input-group-text inp-color" id="inputGroup-sizing-sm">Eat
                                                       Meat: </span>
                                                 <input type="number" class="form-control" value="50"
-                                                      aria-label="Sizing example input"
+                                                      onClick="this.select();" aria-label="Sizing example input"
                                                       aria-describedby="inputGroup-sizing-xs" id="eat-meat-inp">
                                                 <button onclick="EatMeat()" class="btn btn-outline-primary"
                                                       type="button">Eat</button>
                                           </div>
+                                          <div class="info-span">Info: eating 100 meat gives you 143 cal Energy + 2 cal
+                                                of Fat. </div>
+                                          <br>
                                           <div class="input-group input-group-sm mb-3">
                                                 <span class="input-group-text inp-color" id="inputGroup-sizing-sm">Eat
                                                       Bread: </span>
@@ -271,9 +275,11 @@
                                           <hr>
 
                                           <p>Hunting: </p>
-                                          <p class="alert alert-danger" role="alert">You have not any hunting camp.</p>
-                                          <div id="hunting-time" style="display: none;">
-                                                <p>Time to next hunt: 5H 22M</p>
+                                          <p class="alert alert-danger" role="alert" id="no-hc" style="display: none;">
+                                                You have not any hunting camp.</p>
+                                          <div id="hunting-time" style="display: block;">
+                                                <p style="display: none;" id="next-hunt">Time to next hunt: <span
+                                                            id="hunt-timer">--:--:--</span></p>
                                                 <button onclick="Hunt()" class="connect-wallet-btn" id="hunt-btn"
                                                       style="display: block;" disabled>Hunt</button>
                                           </div>
@@ -295,7 +301,7 @@
                         </span>
 
                   </h1>
-                  <div class="panel1" style="display: block;">
+                  <div class="panel1" style="display: none;">
 
                         <p>Manages Lands and lands market here:</p>
                         <hr id="land-market-top">
@@ -348,8 +354,13 @@
                         <div class="control-unit" id="my-permits-div">
                               <p>My Permits:</p>
                               <hr>
+                              <div id="loading-permits" class="text-center">
+                                    <div class="spinner-border " role="status">
+                                          <span class="visually-hidden">Loading...</span>
+                                    </div>
+                              </div>
                               <div id="my-permits-list">
-                                    <p id="no-permit">You have not any permits yet.</p>
+                                    <p id="no-permit" style="display: none;">You have no permits yet.</p>
                               </div>
                         </div>
                         <br>
@@ -392,6 +403,33 @@
                                           <div class=" ">
                                                 <button type="button" class="btn-sm btn-primary float-end "
                                                       onclick="listLand()">List</button>
+                                                </button>
+                                          </div>
+
+
+
+
+                                    </div>
+                              </div>
+                              <hr>
+
+                              <p>Remove land from sell list:</p>
+                              <hr>
+                              <div>
+                                    <div class="land-for-sale col-8 row">
+
+
+                                          <div class="input-group input-group-sm mb-3">
+                                                <span class="input-group-text inp-color" id="inputGroup-sizing-sm">Enter
+                                                      Land Id: </span>
+                                                <input type="text" class="form-control"
+                                                      aria-label="Sizing example input"
+                                                      aria-describedby="inputGroup-sizing-xs" id="remove-sell-landId">
+                                          </div>
+
+                                          <div class=" ">
+                                                <button type="button" class="btn-sm btn-primary float-end "
+                                                      onclick="removeListLand()">Remove</button>
                                                 </button>
                                           </div>
 
@@ -498,57 +536,75 @@
 
             <div class="body-box">
                   <h1>Market board</h1>
-                  <p>Lands and goods market here:</p>
-                  <hr id="land-market-top">
-
-                  <div class="control-unit">
-                        <p>Land for sale:</p>
-                        <hr>
-                        <div id="sell-list"></div>
-                  </div>
-                  <br>
-                  <div class="control-unit">
-                        <p>List a land to sale:</p>
-                        <hr>
-                        <div>
-                              <div class="land-for-sale col-8 row">
+                  <p>Producs market here:</p>
 
 
-                                    <div class="col-12 row ">
-                                          <div class="input-group input-group-sm mb-3">
-                                                <span class="input-group-text inp-color" id="inputGroup-sizing-sm">Enter
-                                                      Land Id: </span>
-                                                <input type="text" class="form-control"
-                                                      aria-label="Sizing example input"
-                                                      aria-describedby="inputGroup-sizing-xs">
-                                          </div>
-                                          <div class="input-group input-group-sm mb-3">
-                                                <span class="input-group-text inp-color" id="inputGroup-sizing-sm">Enter
-                                                      Price: &nbsp;&nbsp;&nbsp; </span>
-                                                <input type="number" class="form-control"
-                                                      aria-label="Sizing example input"
-                                                      aria-describedby="inputGroup-sizing-sm">
-                                          </div>
-                                          <div class=" ">
-                                                <button type="button" class="btn-sm btn-primary float-end "
-                                                      onclick="listLand()">List</button>
-                                                </button>
-                                          </div>
-
-                                    </div>
-
-
-
-                              </div>
-                        </div>
-                  </div>
                   <br>
                   <div class="control-unit">
                         <p>Products for sale:</p>
+
                         <hr>
                         <div>
                               <p>Meat:</p>
                               <div id="meat-sell-list"></div>
+                              <p id="no-meat-sell-list" style="display: none;">There are no meats to sell at the moment
+                              </p>
+                        </div>
+                        <br>
+                        <hr>
+                        <div>
+                              <p>Bread:</p>
+                              <div id="bread-sell-list"></div>
+                        </div>
+                        <br>
+                        <hr>
+                        <div>
+                              <p>Flour:</p>
+                              <div id="flour-sell-list"></div>
+                        </div>
+                        <br>
+                  </div>
+
+
+                  <br>
+                  <div class="control-unit">
+                        <p>Sell products:</p>
+                        <div class="info-span">You can post a sell offer by defining the aamount and a desired price for
+                              the defined amount. It will be sold as a package with the price. </div>
+                        <hr>
+
+                        <div class="control-unit">
+                              <p>Sell Meat:</p>
+                              <hr>
+                              <div>
+                                    <div class="land-for-sale col-8 row">
+
+
+                                          <div class="input-group input-group-sm mb-3">
+                                                <span class="input-group-text inp-color" id="inputGroup-sizing-sm">Enter
+                                                      Amount: </span>
+                                                <input type="number" class="form-control"
+                                                      aria-label="Sizing example input" onClick="this.select();"
+                                                      aria-describedby="inputGroup-sizing-xs" id="sell-meat-amount">
+                                          </div>
+                                          <div class="input-group input-group-sm mb-3">
+                                                <span class="input-group-text inp-color" id="inputGroup-sizing-sm">Enter
+                                                      Price: &nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                                <input type="number" class="form-control"
+                                                      aria-label="Sizing example input" onClick="this.select();"
+                                                      aria-describedby="inputGroup-sizing-sm" id="sell-meat-price">
+                                          </div>
+                                          <div class=" ">
+                                                <button type="button" class="btn-sm btn-primary float-end "
+                                                      onclick="sellMeat()">Post</button>
+                                                </button>
+                                          </div>
+
+
+
+
+                                    </div>
+                              </div>
                         </div>
                         <br>
                         <hr>
@@ -576,6 +632,7 @@
       <script src="assets/js/consts.js"></script>
       <script src="assets/js/onPageWallet.js"></script>
       <script src="assets/js/indexManager.js"></script>
+      <script src="assets/js/indexOperator.js"></script>
       <script src="assets/js/main.js"></script>
 
 </body>

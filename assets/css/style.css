@@ -5,6 +5,17 @@ font-family: 'Jura', sans-serif;                //its slim
 font-family: 'Roboto', sans-serif;              //its very formal and serius
 font-family: 'Tourney', cursive;                //its Outlined
 */
+
+.delete-icon {
+      width: 20px;
+      height: px;
+}
+
+.info-span {
+      font-size: small;
+      line-height: 80%;
+}
+
 a {
       cursor: pointer;
 }

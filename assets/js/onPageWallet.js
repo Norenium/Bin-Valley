@@ -92,11 +92,27 @@ function tryInitContract() {
 
 
 //#region ======================== GLOBAL CALL CONTRACT METHODS ========================
+
+
+//#region =========== Read Calls ===========
+
+
+//#region === Land
+
 function getMyName() {
       return new Promise(function (resolve) {
             resolve(myContract.bravoCall(31, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [""], []).then(res => {
                   return res[0];
             }));
+      })
+}
+
+function getMyId() {
+      return new Promise(function (resolve) {
+            resolve(
+                  myContract.charlieCall(33, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [""], []).then(res => {
+                        return res;
+                  }));
       })
 }
 
@@ -152,9 +168,13 @@ function getSellLandsId() {
       })
 }
 
-
-
-
+function getMyPermits() {
+      return new Promise(function (resolve) {
+            resolve(myContract.bravoCall(15, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [""], []).then(res => {
+                  return res;
+            }));
+      })
+}
 
 
 function getMyBuildings() {
@@ -176,26 +196,121 @@ function getAllBuildings() {
 }
 
 
-// returns a uint256  number of seconds from 1970 to the block latest hunt happend.
+// returns an uint256 array which
+// result[0] is the number of seconds from 1970 to the block latest hunt happend. 0=never hnted;
+// result[1] is the number of seconds user must wait after a hunt to trigger next hunt;
 function getWhenCanHunt() {
       //console.log('call for when can hunt');
-      return new Promise(function (resolve, revoke) {
-            try {
-                  console.log('TRY TRY Hunting privilage')
+      return new Promise(function (resolve) {
 
-                  resolve(myContract.charlieCall(32, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [""], []).then(res => {
-                        //console.log('res for when can hunt: ' + res);
-                        return res;
-                  }));
-            } catch (error) {
-                  revoke(function () { return false });
-                  console.log('have not Hunting privilage')
 
-            }
+            resolve(myContract.charlieCall(32, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [""], []).then(res => {
+                  return res;
+            }).catch(res => {
+                  //console.log('catche res: ' + res);
+                  return false;
+            }));
+
+            /*
+            resolve(myContract.charlieCall(32, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [""], []).then(res => {
+                  return res;
+            }).error(
+                  res => {
+                        //window.alert(res.errorArgs);
+                        console.log('error in when can hunt: ' + res.errorArgs);
+                        return false;
+                  }
+            ));
+*/
+            //reject(() => { return false; })
 
       })
 }
 
 
 
+
+
+//#endregion
+
+//#region === Product
+function getMeatSellList() {
+
+      return new Promise(function (resolve) {
+            resolve(myContract.bravoCall(32, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [""], []).then(res => {
+                  return res;
+            }));
+      })
+
+}
+
+//#endregion
+//#endregion
+
+
+
+
+
+//#region =========== Delta Calls ===========
+//#region === Lands 
+
+
+function _listLandToSell(landId, price) {
+      myContract.deltaCall(11, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [landId, ""], [price]);
+}
+
+function _removeLandFromSellList(landId) {
+      myContract.deltaCall(12, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [landId, ""], []);
+}
+
+function _buyLand(landId, price) {
+      myContract.deltaCall(13, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [landId, ""], [price]);
+}
+
+function _mintPermit(PermitType, landType) {
+      myContract.deltaCall(14, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [""], [PermitType, landType]);
+}
+
+function _buildBuilding(PermitId, landId) {
+      myContract.deltaCall(15, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [PermitId, landId], [0, 0]);
+}
+
+function _hunt() {
+      myContract.deltaCall(35, ["0x87B64804e36f20acA9052D3b4Cd7188D41b59f97"], [""], []);
+}
+
+function _eatMeat(amount) {
+      myContract.deltaCall(32, ["0x87B64804e36f20acA9052D3b4Cd7188D41b59f97"], [""], [amount]);
+}
+
+//#endregion
+
+//#region === Products 
+
+function _sellMeat(amount, price) {
+      myContract.deltaCall(36, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [""], [amount, price]);
+}
+
+function _sellMeat(amount, price) {
+      myContract.deltaCall(36, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [""], [amount, price]);
+}
+
+function _cancelMeatToSell(ticketId) {
+      myContract.deltaCall(37, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [""], [Number(ticketId)]);
+}
+//#endregion
+
+//#region Other
+
+function startGame(name) {
+
+      return new Promise(function (resolve) {
+            resolve(myContract.deltaCall(31, ["0x3B04C7553AEEf9797C50127B8C5d127B8384cF71"], [name, ""], []).then(res => {
+                  return res;
+            }));
+      })
+
+}
+
+//#endregion
 //#endregion

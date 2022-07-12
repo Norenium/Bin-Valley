@@ -414,7 +414,7 @@ function start() {
             //console.log('#=> delta 31');
             setTimeout(function () {
                   window.location.reload();
-                  document.getElementById("main-waiting").style.display = 'block';
+                  //document.getElementById("main-waiting").style.display = 'block';
 
                   //window.alert('1000')
             }, 9000);
