@@ -1,14 +1,37 @@
+.woner-logo {
+      width: 40px;
+}
 
-.light-color-text{
+.mp2 {
+      /* float: left; */
+      position: absolute;
+      align-self: end;
+      /* left: 10px; */
+      /* top: 10px; */
+      /* width: 40px; */
+      z-index: 99;
+      /* background-color: #b1cf5770; */
+      padding: 6px;
+      color: #151b02e0;
+      font-weight: bold;
+      font-size: small;
+      margin-left: 110px;
+      margin-top: -55px;
+      border-radius: 5px;
+}
+
+.light-color-text {
       color: #FDA;
 
 }
-.Agral{
+
+.Agral {
       background-color: #bba31e;
       color: #dde2cae0;
 
 }
-.mp{
+
+.mp {
       /* float: left; */
       position: absolute;
       /* left: 0px;
@@ -25,16 +48,18 @@
       display: none;
       border-radius: 5px;
 }
-.mp p{
+
+.mp p {
       margin: 0px;
 }
 
-#toolbar{
+#toolbar {
       width: 1500px;
       /* height: 40px; */
-      background-color:  #505;
+      background-color: #505;
 }
-.tool-btn{
+
+.tool-btn {
 
       background-color: rgb(109, 3, 109);
       border: 2px solid #FDA;
@@ -45,34 +70,38 @@
       margin-bottom: 6px;
       margin-right: 4px;
 }
-.tool-btn:hover{
+
+.tool-btn:hover {
       background-color: rgb(153, 9, 153);
       border: 2px solid rgb(228, 193, 141);
 
 }
-.btn-active{
+
+.btn-active {
       background-color: rgb(226, 82, 226);
       border: 2px solid #FDA;
       color: #FDA;
 }
 
-.pixle{
+.pixle {
       width: 150px !important;
       height: 150px;
       margin: 0px !important;
       padding: 0px !important;
 }
-.pixle:hover{
+
+.pixle:hover {
       border: 1px gray solid;
 }
-.pixle-hover{
+
+.pixle-hover {
       border: 1px gray solid;
 }
-.my-row{
+
+.my-row {
       width: 2250px !important;
 
       display: flex;
       flex-wrap: wrap;
 
 }
-

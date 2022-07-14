@@ -1,5 +1,4 @@
 document.getElementById('show-land-id').addEventListener('click', toggleShowLandId);
-document.getElementById('show-for-sale').addEventListener('click', toggleShowSale);
 document.getElementById('back').addEventListener('click', back);
 setSalesList();
 var lana = 'id:AS21';
@@ -51,7 +50,6 @@ function setBuildings() {
 
 
 function back() {
-
       window.location.href = './';
 }
 
@@ -122,7 +120,7 @@ function setSalesList() {
 
 
 //#region  Show Info
-var idShowan = false;
+var idShowan = true;
 function toggleShowLandId() {
       if (idShowan) {
             idShowan = false;

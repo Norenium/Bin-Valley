@@ -3,6 +3,8 @@ StartContract();
 function ConnctWallet() {
       StartContract();
 }
+
+
 var myId;
 var allLandsId = new Array();
 var myLandsId;
@@ -348,14 +350,8 @@ function setSellMeatList() {
 function getAndSetSellLandData() {
       getSellLandsPrices().then(res => {
             sellLandsPrice = res;
-            // console.log('All lands id count:' + allLandsId.length);
-            // console.log('sell lands id [0]:' + parseInt(sellLandsPrice[0]));
-            // console.log('sell lands id [1]:' + parseInt(sellLandsPrice[1]));
-            // console.log('sell lands id [2]:' + parseInt(sellLandsPrice[2]));
-            // console.log('sell lands id [3]:' + parseInt(sellLandsPrice[3]));
-            // console.log('sell lands id [4]:' + parseInt(sellLandsPrice[4]));
-            // console.info(sellLandsPrice);
             sellLandArray = new Array(sellLandsPrice.length);
+
             document.getElementById('loading-sell-lands').style.display = "none";
 
             if (sellLandsPrice.length == 0) {
